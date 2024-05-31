@@ -1,7 +1,11 @@
-import "./App.css";
+import Router from "./shared/Router";
 
 function App() {
-  return <div>안녕하세요</div>;
+  return (
+    <>
+      <Router></Router>
+    </>
+  );
 }
 
 export default App;
