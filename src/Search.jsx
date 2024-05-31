@@ -4,7 +4,7 @@ function Search() {
   const [userInput, setUserInput] = useState("");
 
   const searchData = (e) => {
-    setUserInput(e.target.value);
+    setUserInput(e.targe.value);
   };
 
   const searchClick = (e) => {
