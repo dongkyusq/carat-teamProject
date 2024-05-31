@@ -1,7 +1,11 @@
-import "./App.css";
+import NewsfeedCreate from "./components/newsfeedCreate";
 
 function App() {
-  return <div>안녕하세요</div>;
+  return (
+    <>
+      <NewsfeedCreate />
+    </>
+  );
 }
 
 export default App;
