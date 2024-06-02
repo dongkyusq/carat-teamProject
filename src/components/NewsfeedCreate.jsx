@@ -22,16 +22,18 @@ function NewsfeedCreate() {
       <StWriteWrap>
         <StTextareaWrap>
           <StExitBtn>
-            <CloseIcon style={StIcon} />
+            <CloseIcon style={stCloseIcon} />
           </StExitBtn>
           <StTextarea ref={text} placeholder="지금 무슨 생각을 하고 계신가요?"></StTextarea>
         </StTextareaWrap>
-        <StHr />
         <StToolWrap>
-          <StPhotoInput type="file" accept="image/gif, image/jpeg, image/jpg, image/png" src={<AddPhotoAlternateIcon />} />
+          <StPhotoInputWrap>
+            <AddPhotoAlternateIcon style={stPhotoIcon} />
+            <StInput type="file" accept="image/gif, image/jpeg, image/jpg, image/png" />
+          </StPhotoInputWrap>
           <StSendBtn onClick={sendText}>
-            <StSpan>보내기</StSpan>
-            <SendIcon style={StSendIcon} />
+            <StSpan>등록하기</StSpan>
+            <SendIcon style={stSendIcon} />
           </StSendBtn>
         </StToolWrap>
       </StWriteWrap>
@@ -44,19 +46,16 @@ export default NewsfeedCreate;
 const StWriteWrap = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   width: 600px;
   height: 500px;
   margin: 0 auto;
-  border-radius: 20px;
-
-  font-family: "Pretendard-Regular";
-  background-color: #121212;
 `;
 const StTextareaWrap = styled.div`
   position: relative;
   width: 100%;
   height: 85%;
+  background-color: #121212;
 `;
 const StExitBtn = styled.button`
   position: absolute;
@@ -64,22 +63,25 @@ const StExitBtn = styled.button`
   right: 0;
   width: 50px;
   height: 50px;
+  padding: 0;
   border: 0;
+  cursor: pointer;
   background-color: transparent;
 `;
 const StTextarea = styled.textarea`
   display: block;
   position: absolute;
-  bottom: 0px;
+  bottom: 50px;
   left: 50px;
   width: calc(100% - 100px);
-  height: calc(100% - 50px);
+  height: calc(100% - 100px);
   padding: 10px;
   border: none;
   resize: none;
-  box-sizing: border-box;
   outline: none;
-  font-size: 1.1rem;
+  box-sizing: border-box;
+  overflow: auto;
+  font-size: 1rem;
 
   background-color: transparent;
   color: #fefefe;
@@ -89,41 +91,51 @@ const StToolWrap = styled.div`
   justify-content: space-between;
   width: 100%;
   height: 14%;
-  padding: 12px;
+  padding: 10px;
+  border-top: 1px solid #fefefe80;
   box-sizing: border-box;
+  background-color: #121212;
 `;
-const StPhotoInput = styled.input`
+const StPhotoInputWrap = styled.label`
+  position: relative;
   width: 10%;
   border: 0;
-  background-color: transparent;
+  cursor: pointer;
+`;
+const StInput = styled.input`
+  display: none;
 `;
 const StSendBtn = styled.button`
   display: flex;
   justify-content: center;
-  gap: 20px;
-  width: 22%;
-  border: 0;
-  border-radius: 10px;
   align-items: center;
+  gap: 10px;
+  width: 22%;
+  padding: 0;
+  border: 0;
+  border-radius: 7px;
+  cursor: pointer;
   background-color: #ffd0d0;
 `;
 const StSpan = styled.span`
-  display: inline-block;
-  font-size: 1.1rem;
-  font-weight: 900;
-`;
-const StHr = styled.div`
-  width: 100%;
-  height: 1px;
-  margin: 0 auto;
-  background-color: #fefefe;
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
 `;
 
-const StIcon = {
-  fontSize: "1.2rem",
+const stCloseIcon = {
+  fontSize: "1.4rem",
   color: "#fefefe",
 };
-const StSendIcon = {
-  display: "inline",
-  fontSize: "1.1rem",
+const stPhotoIcon = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  margin: "-11.2px 0 0 -11.2px",
+  fontSize: "1.4rem",
+  color: "#fefefe",
+};
+const stSendIcon = {
+  fontSize: "1rem",
+  marginTop: "2px",
 };
