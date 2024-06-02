@@ -1,11 +1,10 @@
-import "./App.css";
-import HomeLeft from "./HomeLeft";
+import Router from "./shared/Router";
 
 function App() {
   return (
-    <div>
-      <HomeLeft />
-    </div>
+    <>
+      <Router></Router>
+    </>
   );
 }
 
