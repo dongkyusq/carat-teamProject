@@ -1,41 +1,3 @@
-// import React from "react";
-// import styled from "styled-components";
-
-// const MyPage = () => {
-//   const dummyData = {
-//     nickname: "메롱",
-//     mbti: "ESTJ",
-//     comment: "파이팅",
-//     background: "",
-//     profile: "",
-//   };
-//   return <></>;
-// };
-
-// const Container = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   background-color: #1a1a1a;
-//   color: #fff;
-// `;
-
-// const BackgroundImage = styled.img`
-//   width: 100%;
-//   height: 200px;
-//   background-color: #444;
-// `;
-
-// const ProfileSelect = styled.div``;
-
-// const ProfileImage = styled.img``;
-
-// const UserInfo = styled.div``;
-
-// const Name = styled.div`
-// `;
-// export default MyPage;
-
 import React from "react";
 import styled from "styled-components";
 
@@ -43,149 +5,140 @@ const MyPage = () => {
   const dummyData = {
     nickname: "name",
     id: "@id__",
-    comment: "한줄한마디~~",
+    comment: "어렵다...",
     background: "",
     profile: "",
   };
 
   return (
-    <Container>
-      <Background>
-        <BackgroundImage src={dummyData.background} alt="Background" />
-      </Background>
-      <ProfileSection>
-        <ProfileImage src={dummyData.profile} alt="Profile" />
-        <UserInfo>
-          <Name>{dummyData.nickname}</Name>
-          <Id>{dummyData.id}</Id>
-          <Comment>{dummyData.comment}</Comment>
-        </UserInfo>
-      </ProfileSection>
-      <Content>
-        <Divider />
-        <SearchAndFilter>
-          <SearchInput placeholder="Search" />
-          <FilterIcon>🔍</FilterIcon>
-        </SearchAndFilter>
-        <Posts>
-          <Post>
-            <PostProfileImage src={dummyData.profile} alt="Profile" />
-            <PostContent>userName</PostContent>
-          </Post>
-        </Posts>
-      </Content>
-    </Container>
+    <StMainContainer>
+      <StHeader>
+        <StBackButton>←</StBackButton>
+      </StHeader>
+      <StBackground>
+        <StBackgroundImage src={dummyData.background} alt="Background" />
+      </StBackground>
+      <StProfileContainer>
+        <StProfileWrapper>
+          <StProfileImage src={dummyData.profile} alt="Profile" />
+          <StUserInfo>
+            <StUserName>{dummyData.nickname}</StUserName>
+            <StUserId>{dummyData.id}</StUserId>
+            <StUserComment>{dummyData.comment}</StUserComment>
+          </StUserInfo>
+        </StProfileWrapper>
+        <StEditProfileButton>프로필수정</StEditProfileButton>
+      </StProfileContainer>
+    </StMainContainer>
   );
 };
 
-const Container = styled.div`
+const StMainContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #1a1a1a;
+  background-color: #141233;
   color: #fff;
-  width: 100%;
+  width: 600px;
+  margin: 0 auto;
 `;
 
-const Background = styled.div`
+const StHeader = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  height: 50px;
+  background-color: #141233;
+`;
+
+const StBackButton = styled.button`
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+
+  &:hover {
+    color: #ddd;
+  }
+`;
+
+const StBackground = styled.div`
   width: 100%;
   height: 200px;
   background-color: #444;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
 `;
 
-const BackgroundImage = styled.img`
+const StBackgroundImage = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 `;
 
-const ProfileSection = styled.div`
+const StProfileContainer = styled.section`
+  width: 100%;
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+`;
+
+const StProfileWrapper = styled.div`
   display: flex;
   align-items: center;
-  background-color: #1a1a1a;
-  padding: 10px;
-  margin-top: -50px; /* Background 영역과 프로필 영역이 겹치지 않도록 조정 */
-  z-index: 1;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  width: 100%;
 `;
 
-const ProfileImage = styled.img`
+const StProfileImage = styled.img`
   width: 100px;
   height: 100px;
   border-radius: 50%;
   background-color: #ffcccc;
-  border: 5px solid #1a1a1a; /* 배경과의 분리 */
+  border: 5px solid #1a1a1a;
+  margin-right: 20px;
 `;
 
-const UserInfo = styled.div`
-  margin-left: 20px;
+const StUserInfo = styled.div`
+  text-align: left;
 `;
 
-const Name = styled.div`
+const StUserName = styled.h1`
   font-size: 24px;
   font-weight: bold;
 `;
 
-const Id = styled.div`
+const StUserId = styled.p`
   font-size: 18px;
   color: #aaa;
 `;
 
-const Comment = styled.div`
+const StUserComment = styled.p`
   font-size: 16px;
   margin-top: 5px;
 `;
 
-const Divider = styled.div`
-  width: 100%;
-  height: 1px;
-  background-color: #555;
-  margin: 20px 0;
-`;
+const StEditProfileButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  font-size: 14px;
+  color: #1a1a1a;
+  background-color: #ffd0d0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 
-const SearchAndFilter = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 20px;
-`;
-
-const SearchInput = styled.input`
-  padding: 5px;
-  font-size: 16px;
-`;
-
-const FilterIcon = styled.div`
-  margin-left: 10px;
-`;
-
-const Posts = styled.div`
-  width: 100%;
-`;
-
-const Post = styled.div`
-  background-color: #ffcccc;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-`;
-
-const PostProfileImage = styled.img`
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: #ffcccc;
-`;
-
-const PostContent = styled.div`
-  margin-left: 10px;
-  font-size: 18px;
+  &:hover {
+    background-color: #ffc0c0;
+  }
 `;
 
 export default MyPage;
