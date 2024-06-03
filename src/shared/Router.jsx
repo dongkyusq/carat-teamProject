@@ -1,12 +1,12 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import MyPage from "../pages/MyPage";
+import Temp from "../pages/Temp";
 
 const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/mypage" element={<MyPage />} />
+        <Route path="/" element={<Temp />} />
       </Routes>
     </BrowserRouter>
   );
