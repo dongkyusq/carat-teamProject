@@ -42,15 +42,12 @@ function Search() {
 
   useEffect(() => {
     const getProducts = async () => {
-      try {
-        let { data: posts, error } = await supabase.from("posts").select("text_content");
-        if (error) {
-          throw error;
-        }
-        console.log(posts);
-        setPosts(posts);
-      } catch (error) {
-        console.error(error);
+      let { data, error } = await supabase.from("posts").select("*");
+      if (error) {
+        console.log("error", error);
+      } else {
+        console.log("data", data);
+        setPosts(data);
       }
     };
 
