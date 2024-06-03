@@ -14,10 +14,11 @@ const Login = () => {
     };
 
     return (
-        <LoginWrapper>
+        <div>
             <Button onClick={openModal}>로그인</Button>
             <Modal isOpen={isModalOpen} onClose={closeModal}>
-                <FormWrapper>
+                <LoginWrapper>
+                    <Circle />
                     <Form>
                         <LoginInput>
                             <Label>아이디:</Label>
@@ -28,21 +29,15 @@ const Login = () => {
                             <Input type="password" placeholder="비밀번호를 입력하세요" required />
                         </LoginInput>
                         <Button type="submit">로그인</Button>
-                    </Form>
-                    <LoginFooter>
                         <SignUp>회원가입</SignUp>
-                    </LoginFooter>
-                </FormWrapper>
+                    </Form>
+                </LoginWrapper>
             </Modal>
-        </LoginWrapper>
+        </div>
     );
 };
 
 export default Login;
-
-const LoginWrapper = styled.div`
-  text-align: center;
-`;
 
 const Button = styled.button`
   background-color: #FFD0D0;
@@ -52,39 +47,55 @@ const Button = styled.button`
   margin: 20px;
   cursor: pointer;
   font-size: 20px;
-  border-radius: 20px;
+  border-radius: 15px;
 
   &:hover {
     background-color: #f8cacc;
   }
 `;
 
-const FormWrapper = styled.div`
+const LoginWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  width: 100%;
-  font-size: 20px;
+  background-color: #CC8798;
+  padding: 20px;
+  border-radius: 15px;
+  width: 800px;
+  height: 800px;
+  margin: 0 auto;
+  position: relative;
+`;
+
+const Circle = styled.div`
+  width: 50px;
+  height: 50px;
+  background-color: #FFD0D0;
+  border-radius: 50%;
+  position: absolute;
+  top: -25px;
+  left: -25px; 
+  z-index: 1;
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 25px;
   background-color: white;
   border-radius: 15px;
-  width: 80%;
-  max-width: 400px;
-  margin: 0 auto;
+  width: 700px;
+  height: 700px;
+  justify-content: center;
 `;
 
 const LoginInput = styled.div`
   margin: 20px 0;
-  width: 100%;
+  width: 80%;
   text-align: left;
+  padding: 20px;
 `;
 
 const Label = styled.label`
@@ -100,12 +111,6 @@ const Input = styled.input`
   border-radius: 15px;
   border: 2px solid #333;
   margin-top: 5px;
-`;
-
-const LoginFooter = styled.div`
-  display: flex;
-  justify-content: center;
-  width: 100%;
 `;
 
 const SignUp = styled.div`
