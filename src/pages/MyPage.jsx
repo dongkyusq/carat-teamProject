@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const MyPage = () => {
   const dummyData = {
@@ -13,7 +14,7 @@ const MyPage = () => {
   return (
     <StMainContainer>
       <StHeader>
-        <StBackButton>←</StBackButton>
+        <StyledArrowBackIcon />
       </StHeader>
       <StBackground>
         <StBackgroundImage src={dummyData.background} alt="Background" />
@@ -46,16 +47,14 @@ const StMainContainer = styled.div`
 const StHeader = styled.div`
   width: 100%;
   display: flex;
-  justify-content: flex-start;
+  align-items: center;
   height: 50px;
   background-color: #141233;
 `;
 
-const StBackButton = styled.button`
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 24px;
+const StyledArrowBackIcon = styled(ArrowBackIcon)`
+  font-size: 1.4rem;
+  color: #fefefe;
   cursor: pointer;
 
   &:hover {
