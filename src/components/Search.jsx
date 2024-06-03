@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { supabase } from "../utils/supabaseClient";
-
+import { supabase } from "";
 const ExpenseItemList = styled.div`
   display: flex;
   flex-direction: column;
@@ -42,7 +41,7 @@ function Search() {
 
   useEffect(() => {
     const getProducts = async () => {
-      let { data, error } = await supabase.from("posts").select("*");
+      let { data, error } = await supabase.from("posts").select("text_content");
       if (error) {
         console.log("error", error);
       } else {
@@ -54,13 +53,19 @@ function Search() {
     getProducts();
   }, []);
 
+  const filteredPosts = posts.filter(post => post.text_content.toLowerCase().includes(userInput.toLowerCase()));
+
   return (
     <div>
       <ExpenseItemList>
         <FormStyle onSubmit={searchClick}>
           <InputStyle onChange={searchData} onFocus={() => setSearchFocus(true)} onBlur={() => setSearchFocus(false)} searchFocus={searchFocus} type="text" placeholder="🔍︎검색" />
         </FormStyle>
-        <div>{posts.length > 0 ? posts.map((post, index) => <div key={index}>{post.text_content}</div>) : <div>No posts available</div>}</div>
+        <div>
+          {filteredPosts.map((post, index) => (
+            <div key={index}>{post.text_content}</div>
+          ))}
+        </div>
       </ExpenseItemList>
     </div>
   );
