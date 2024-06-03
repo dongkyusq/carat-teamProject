@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Modal from './LoginModal';
+import Modal from './Modal';
 import styled from 'styled-components';
 
 const Login = () => {
@@ -12,6 +12,8 @@ const Login = () => {
     const closeModal = () => {
         setIsModalOpen(false);
     };
+
+    //로그인해야지만 모달 닫히게 
 
     return (
         <div>
