@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { supabase } from "";
+import { supabase } from "../supabaseClient";
+
 const ExpenseItemList = styled.div`
   display: flex;
   flex-direction: column;
