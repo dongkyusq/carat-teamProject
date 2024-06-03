@@ -3,6 +3,25 @@ import styled from 'styled-components';
 
 //modal 다운 yarn add react-modal;
 
+const Modal = ({ isOpen, onClose, children }) => {
+  if (!isOpen) {
+    return null;
+  }
+
+  return (
+    <Overlay onClick={onClose}>
+      <Content2>
+        <Content onClick={(e) => e.stopPropagation()}>
+          {children}
+          {/* <CloseButton onClick={onClose}>닫기</CloseButton> */}
+        </Content>
+      </Content2>
+    </Overlay>
+  );
+};
+
+export default Modal;
+
 const Overlay = styled.div`
   position: fixed;
   top: 0;
@@ -49,21 +68,3 @@ const CloseButton = styled.button`
   }
 `;
 
-const Modal = ({ isOpen, onClose, children }) => {
-  if (!isOpen) {
-    return null;
-  }
-
-  return (
-    <Overlay onClick={onClose}>
-      <Content2>
-        <Content onClick={(e) => e.stopPropagation()}>
-          {children}
-          <CloseButton onClick={onClose}>닫기</CloseButton>
-        </Content>
-      </Content2>
-    </Overlay>
-  );
-};
-
-export default Modal;

@@ -15,20 +15,24 @@ const Login = () => {
 
     return (
         <LoginWrapper>
-            <Button onClick={openModal}>Login</Button>
+            <Button onClick={openModal}>로그인</Button>
             <Modal isOpen={isModalOpen} onClose={closeModal}>
-                {/* <Title> 로그인 </Title> */}
-                <Form>
-                    <LoginInput>
-                        <Label> 아이디 :</Label>
-                        <Input type="email" placeholder='아이디를 입력하세요' required />
-                    </LoginInput>
-                    <LoginInput>
-                        <Label> 비밀번호 :</Label>
-                        <Input type="password" placeholder='비밀번호를 입력하세요' required />
-                    </LoginInput>
-                    <Button type="submit">로그인 </Button>
-                </Form>
+                <FormWrapper>
+                    <Form>
+                        <LoginInput>
+                            <Label>아이디:</Label>
+                            <Input type="email" placeholder="아이디를 입력하세요" required />
+                        </LoginInput>
+                        <LoginInput>
+                            <Label>비밀번호:</Label>
+                            <Input type="password" placeholder="비밀번호를 입력하세요" required />
+                        </LoginInput>
+                        <Button type="submit">로그인</Button>
+                    </Form>
+                    <LoginFooter>
+                        <SignUp>회원가입</SignUp>
+                    </LoginFooter>
+                </FormWrapper>
             </Modal>
         </LoginWrapper>
     );
@@ -38,10 +42,6 @@ export default Login;
 
 const LoginWrapper = styled.div`
   text-align: center;
-`;
-
-const Title = styled.h2`
-font-size: 30px;
 `;
 
 const Button = styled.button`
@@ -59,24 +59,61 @@ const Button = styled.button`
   }
 `;
 
+const FormWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  font-size: 20px;
+`;
+
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 20px;
+  background-color: white;
+  border-radius: 15px;
+  width: 80%;
+  max-width: 400px;
+  margin: 0 auto;
 `;
 
 const LoginInput = styled.div`
-  margin: 30px;
+  margin: 20px 0;
+  width: 100%;
+  text-align: left;
 `;
 
 const Label = styled.label`
   font-weight: bold;
-  margin: 10px;
+  margin-bottom: 5px;
+  display: inline-block;
 `;
 
 const Input = styled.input`
-  padding: 15px;
+  padding: 10px;
+  width: 100%;
   font-size: 16px;
-  border-radius: 20px;
-  border: 1px solid #333;
+  border-radius: 15px;
+  border: 2px solid #333;
+  margin-top: 5px;
+`;
+
+const LoginFooter = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+`;
+
+const SignUp = styled.div`
+  color: #FF6F61;
+  font-size: 15px;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
