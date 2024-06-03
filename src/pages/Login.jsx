@@ -1,42 +1,43 @@
 import React, { useState } from 'react';
 import Modal from './Modal';
 import styled from 'styled-components';
+import Join from './Join';
 
 const Login = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
 
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
-    //로그인해야지만 모달 닫히게 
+  //로그인해야지만 모달 닫히게 
 
-    return (
-        <div>
-            <Button onClick={openModal}>로그인</Button>
-            <Modal isOpen={isModalOpen} onClose={closeModal}>
-                <LoginWrapper>
-                    <Circle />
-                    <Form>
-                        <LoginInput>
-                            <Label>아이디:</Label>
-                            <Input type="email" placeholder="아이디를 입력하세요" required />
-                        </LoginInput>
-                        <LoginInput>
-                            <Label>비밀번호:</Label>
-                            <Input type="password" placeholder="비밀번호를 입력하세요" required />
-                        </LoginInput>
-                        <Button type="submit">로그인</Button>
-                        <SignUp>회원가입</SignUp>
-                    </Form>
-                </LoginWrapper>
-            </Modal>
-        </div>
-    );
+  return (
+    <div>
+      <Button onClick={openModal}>로그인</Button>
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <LoginWrapper>
+          <Circle />
+          <Form>
+            <LoginInput>
+              <Label>아이디:</Label>
+              <Input type="email" placeholder="아이디를 입력하세요" required />
+            </LoginInput>
+            <LoginInput>
+              <Label>비밀번호:</Label>
+              <Input type="password" placeholder="비밀번호를 입력하세요" required />
+            </LoginInput>
+            <Button type="submit">로그인</Button>
+            <SignUp>회원가입</SignUp>
+          </Form>
+        </LoginWrapper>
+      </Modal>
+    </div>
+  );
 };
 
 export default Login;
