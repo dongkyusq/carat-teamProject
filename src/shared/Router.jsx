@@ -1,10 +1,13 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Temp from "../pages/Temp";
 
 const Router = () => {
   return (
     <BrowserRouter>
-      <Routes></Routes>
+      <Routes>
+        <Route path="/" element={<Temp />} />
+      </Routes>
     </BrowserRouter>
   );
 };
