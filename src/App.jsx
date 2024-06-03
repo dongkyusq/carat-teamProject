@@ -1,13 +1,10 @@
-import "./App.css";
-import Search from "./Search";
-import Weather from "./Weather.jsx";
+import Router from "./shared/Router";
 
 function App() {
   return (
-    <div>
-      <Search />
-      <Weather />
-    </div>
+    <>
+      <Router />
+    </>
   );
 }
 
