@@ -33,7 +33,7 @@ const Weather = () => {
     };
 
     fetchWeather();
-  }, city);
+  }, [city]);
 
   if (error) {
     return <div>{error}</div>;

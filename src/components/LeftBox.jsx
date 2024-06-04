@@ -60,8 +60,8 @@ const UserName = styled.button`
 const LeftBox = () => {
   const navigate = useNavigate();
 
-  const navigateToNewPosting = () => {
-    navigate("/"); // 새글 등록창으로 이동
+  const goPostPage = () => {
+    navigate("/post"); // 새글 등록창으로 이동
   };
 
   return (
@@ -72,7 +72,7 @@ const LeftBox = () => {
         </Logo>
         <Login />
         <DropdownPack />
-        <PostButton>새글 등록하기</PostButton>
+        <PostButton onClick={goPostPage}>새글 등록하기</PostButton>
       </BoxInner>
     </Box>
   );
