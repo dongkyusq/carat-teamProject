@@ -114,7 +114,10 @@ function DropdownMenu(props) {
 }
 
 const filterIcon = {
-  color: "#cc8798",
+  color: "#141233",
+  fontSize: "25px",
+  marginLeft: "110px",
+  marginTop: "-2px",
 };
 
 const NavBarP = styled.p`
@@ -146,14 +149,15 @@ const MenuItem = styled.a`
 
 const Dropdown = styled.div`
   position: absolute;
-  top: 40px;
-  left: -162px;
-  width: 205px;
+  top: 50px;
+  left: -140px;
+  width: 220px;
   border-radius: 10px;
   overflow: hidden;
   background-color: white;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-  font-size: 13px;
+  font-size: 20px;
+  padding: 10px;
 `;
 
 const NavIconBtn = styled.a`
@@ -166,40 +170,33 @@ const NavIconBtn = styled.a`
   border: 0;
   background-color: transparent;
   transition: filter 300ms;
-
-  &:hover {
-    filter: brightness(1.2);
-  }
 `;
 
 const NavChildren = styled.li`
-  width: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 170px;
+  margin-left: 80px;
   position: absolute;
-
-  &:hover {
-    color: white;
-  }
 `;
 
 const Navbar = styled.nav`
   background-color: transparent;
-  margin-bottom: 180px;
-  margin-top: 0;
+  margin-bottom: 280px;
+  cursor: pointer;
 `;
 
 const NavbarItem = styled.ul`
   max-width: 100%;
-  height: 30px;
+  height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: white;
-  border-radius: 10px;
-  color: black;
+  border-radius: 20px;
+  color: #141233;
+  font-weight: bold;
+  font-size: 20px;
 `;
 
 const MBTIListContainer = styled.div`
