@@ -23,19 +23,21 @@ const Logo = styled.div`
   flex-shrink: 0;
   width: 90px;
   height: 90px;
-  margin: -30px 0 30px -30px;
+  margin: -20px 0 30px -30px;
+  cursor: pointer;
 `;
 
 const PostButton = styled.button`
   flex-shrink: 0;
   width: 100%;
-  height: 40px;
+  height: 50px;
   font-size: 20px;
   font-weight: bold;
   border-radius: 20px;
   background: #ffd0d0;
   border: 0;
   color: #141233;
+  cursor: pointer;
 
   &:hover {
     background-color: #cc8798;
@@ -54,8 +56,8 @@ const UserInfo = styled.div`
 const UserImg = styled.img`
   border-radius: 100%;
   background: #f8cacc;
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
 `;
 
 const UserName = styled.span`
@@ -63,8 +65,8 @@ const UserName = styled.span`
   border: 0;
   color: white;
   text-align: center;
-  font-size: 14px;
-  margin-left: 10px;
+  font-size: 20px;
+  margin-left: 20px;
 `;
 
 const LoginBtn = styled.button`
@@ -74,10 +76,12 @@ const LoginBtn = styled.button`
   align-items: center;
   width: 100%;
   border: 0;
-  height: 30px;
+  height: 50px;
   background: #f8cacc;
   color: #141233;
   font-weight: bold;
+  font-size: 20px;
+  cursor: pointer;
 
   &:hover {
     background-color: #cc8798;
@@ -86,8 +90,8 @@ const LoginBtn = styled.button`
 `;
 
 const UserBox = styled.div`
-  margin-top: -60px;
-  margin-bottom: -40px;
+  margin-top: -50px;
+  margin-bottom: -140px;
 `;
 
 const LeftBox = () => {
@@ -109,7 +113,7 @@ const LeftBox = () => {
         </Logo>
         <Login />
         <DropdownPack />
-        <PostButton onClick={navigateToNewPosting}>New Posting</PostButton>
+        <PostButton onClick={navigateToNewPosting}>새글 등록하기</PostButton>
       </BoxInner>
     </Box>
   );

@@ -1,6 +1,83 @@
 import styled from "styled-components";
 import { supabase } from "../supabaseClient";
 import { useEffect, useState } from "react";
+import CropOriginalIcon from "@mui/icons-material/CropOriginal";
+import CommentIcon from "@mui/icons-material/Comment";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+
+const MainFeed = ({ userInput }) => {
+  const [posts, setPosts] = useState([]);
+  useEffect(() => {
+    const getProducts = async () => {
+      let { data, error } = await supabase.from("posts").select("text_content, likes, user_name");
+      if (error) {
+        console.log("error", error);
+      } else {
+        console.log("data", data);
+        setPosts(data);
+      }
+    };
+
+    getProducts();
+  }, []);
+
+  const filteredPosts = posts.filter(post => post.text_content.toLowerCase().includes((userInput || "").toLowerCase()));
+  console.log("userInput", typeof userInput);
+
+  return (
+    <List>
+      {filteredPosts.map((post, index) => (
+        <ListItem key={index}>
+          <UserInfo>
+            <UserImg src="/src/assets/User.jpg" alt="User" />
+            <UserName>{post.user_name}</UserName>
+          </UserInfo>
+          <FeedContent>
+            <Posts>{post.text_content}</Posts>
+            <IconListBox>
+              <Button>
+                <CropOriginalIcon style={photoIcon} />
+              </Button>
+              <Button>
+                <CommentIcon style={commentIcon} />
+              </Button>
+              <Button>
+                <FavoriteBorderIcon style={likeIcon} />
+              </Button>
+            </IconListBox>
+          </FeedContent>
+        </ListItem>
+      ))}
+    </List>
+  );
+};
+
+const Button = styled.button`
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+`;
+
+const photoIcon = {
+  fontSize: "43px",
+  marginTop: "-2px",
+  color: "white",
+};
+
+const commentIcon = {
+  fontSize: "40px",
+  color: "white",
+};
+
+const likeIcon = {
+  fontSize: "40px",
+  color: "white",
+};
+
+const IconListBox = styled.div`
+  display: flex;
+  margin: 0 0 5px 15px;
+`;
 
 const List = styled.ul`
   display: flex;
@@ -10,6 +87,10 @@ const List = styled.ul`
   flex-grow: 1;
   overflow-y: auto;
   margin-bottom: ${props => props.$marginBottom || "unset"};
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const ListItem = styled.li`
@@ -42,52 +123,16 @@ const FeedContent = styled.div`
   width: 100%;
   background: #cc8798;
   border-radius: 20px;
-
-  & > div {
-    margin: 20px;
-    padding: 20px;
-    background: #ffd0d0;
-    border-radius: 20px;
-    color: #000;
-    word-wrap: break-word;
-    word-break: keep-all;
-  }
 `;
 
-const MainFeed = ({ userInput }) => {
-  const [posts, setPosts] = useState([]);
-  useEffect(() => {
-    const getProducts = async () => {
-      let { data, error } = await supabase.from("posts").select("text_content, likes, user_name");
-      if (error) {
-        console.log("error", error);
-      } else {
-        console.log("data", data);
-        setPosts(data);
-      }
-    };
-
-    getProducts();
-  }, []);
-
-  const filteredPosts = posts.filter(post => post.text_content.toLowerCase().includes((userInput || "").toLowerCase()));
-  console.log("userInput", typeof userInput);
-
-  return (
-    <List>
-      {filteredPosts.map((post, index) => (
-        <ListItem key={index}>
-          <UserInfo>
-            <UserImg src="/src/assets/User.jpg" alt="User" />
-            <UserName>{post.user_name}</UserName>
-          </UserInfo>
-          <FeedContent>
-            <div>{post.text_content}</div>
-          </FeedContent>
-        </ListItem>
-      ))}
-    </List>
-  );
-};
+const Posts = styled.div`
+  margin: 10px;
+  padding: 20px;
+  background: #ffd0d0;
+  border-radius: 20px;
+  color: #000;
+  word-wrap: break-word;
+  word-break: keep-all;
+`;
 
 export default MainFeed;

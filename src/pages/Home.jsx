@@ -20,6 +20,10 @@ const Box = styled.div`
   min-width: ${props => props.$minWidth || "0"};
   height: 100%;
   border-right: solid 1px #f8caca;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const BoxInner = styled.div`
