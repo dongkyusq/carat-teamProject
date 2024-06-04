@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { supabase } from "../supabaseClient";
+import supabase from "../supabaseClient";
 import MainFeed from "./MainFeed";
 
 const SearchBox = styled.form`
@@ -39,9 +39,9 @@ const InputStyle = styled.input`
   padding: 10px;
   width: 300px;
   font-size: 16px;
-  background-color: ${props => (props.searchFocus ? "#ffff" : "#ffff")};
+  background-color: ${props => (props.searchfocus ? "#ffff" : "#ffff")};
   outline: none;
-  border: ${props => (props.searchFocus ? "1px solid #000" : "1px solid #000 ")};
+  border: ${props => (props.searchfocus ? "1px solid #000" : "1px solid #000 ")};
 `;
 
 const FormStyle = styled.form`
@@ -52,7 +52,7 @@ const FormStyle = styled.form`
 `;
 
 function Search({ userInput, setUserInput }) {
-  const [searchFocus, setSearchFocus] = useState(false);
+  const [searchfocus, setSearchfocus] = useState(false);
   const [posts, setPosts] = useState([]);
 
   const searchData = e => {
@@ -85,7 +85,7 @@ function Search({ userInput, setUserInput }) {
     <>
       <div>
         <SearchBox onSubmit={searchClick}>
-          <input type="text" placeholder="Search" onChange={searchData} onFocus={() => setSearchFocus(true)} onBlur={() => setSearchFocus(false)} searchFocus={searchFocus} />
+          <input type="text" placeholder="Search" onChange={searchData} onFocus={() => setSearchfocus(true)} onBlur={() => setSearchfocus(false)} searchfocus={searchfocus} />
           <button>
             <svg id="fi_3031293" enableBackground="new 0 0 461.516 461.516" height="20" viewBox="0 0 461.516 461.516" width="20" xmlns="http://www.w3.org/2000/svg">
               <g>
@@ -99,7 +99,7 @@ function Search({ userInput, setUserInput }) {
       {/* <div>
         <ExpenseItemList>
           <FormStyle onSubmit={searchClick}>
-            <InputStyle onChange={searchData} onFocus={() => setSearchFocus(true)} onBlur={() => setSearchFocus(false)} searchFocus={searchFocus} type="text" placeholder="🔍︎검색" />
+            <InputStyle onChange={searchData} onFocus={() => setSearchfocus(true)} onBlur={() => setSearchfocus(false)} searchfocus={searchfocus} type="text" placeholder="🔍︎검색" />
           </FormStyle>
         </ExpenseItemList>
       </div> */}

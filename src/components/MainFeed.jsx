@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { supabase } from "../supabaseClient";
+import supabase from "../supabaseClient";
 import { useEffect, useState } from "react";
 import CropOriginalIcon from "@mui/icons-material/CropOriginal";
 import CommentIcon from "@mui/icons-material/Comment";
