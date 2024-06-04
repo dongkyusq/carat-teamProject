@@ -1,28 +1,29 @@
-import React, { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
+import { useDispatch } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
+import { createPost } from "../API/posts";
+import { uploadFile } from "../API/storage";
+import { addPost } from "../redux/slices/postsSlice";
 import styled from "styled-components";
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import { getInitColorSchemeScript } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 function NewsfeedCreate() {
   const [postContent, setPostContent] = useState("");
   const [postImgFile, setPostImgFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
 
-  const sendContent = async () => {
-    const { error } = await supabase.from("posts").insert({
-      id: "현재 사용자의 id",
-      imgContent: "게시물 이미지 내용",
-      textContent: "게시물 텍스트 내용",
-      likes: 0,
-      comments: 0,
-    });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-    if (error) {
-      console.log("error =>", error);
-      return;
-    }
-  };
+  const resetStates = useCallback(() => {
+    setPostContent("");
+    setPostImgFile(null);
+    setPreviewUrl("");
+  }, []);
 
   const handleContentChange = e => {
     setPostContent(e.target.value);
@@ -33,18 +34,45 @@ function NewsfeedCreate() {
     setPostImgFile(fileObj);
     const objectUrl = URL.createObjectURL(fileObj);
     setPreviewUrl(objectUrl);
-    console.log(objectUrl);
   };
 
-  const uploadImg = e => {
+  const sendContent = async e => {
     e.preventDefault();
+
+    if (postImgFile) {
+      // 사용자가 이미지 선택 했을 때
+      uploadFile(postImgFile).then(img_content => {
+        createPost({
+          id: uuidv4(),
+          img_content,
+          text_content: postContent,
+          user_name: "작성자 이름",
+        }).then(([newPost]) => {
+          dispatch(addPost(newPost));
+          resetStates();
+        });
+      });
+      return;
+    }
+    // 이미지 선택 안했을 때
+    createPost({
+      id: uuidv4(),
+      text_content: postContent,
+    }).then(([newPost]) => {
+      dispatch(addPost(newPost));
+      resetStates();
+    });
+  };
+
+  const goBackPage = () => {
+    navigate(-1);
   };
 
   return (
-    <form /* onSubmit={sendContent} */>
+    <form onSubmit={sendContent}>
       <StWriteWrap>
         <StTextareaWrap>
-          <StExitBtn>
+          <StExitBtn onClick={goBackPage}>
             <CloseIcon style={stCloseIcon} />
           </StExitBtn>
           <StTextarea id="postContent" value={postContent} onChange={handleContentChange} placeholder="지금 무슨 생각을 하고 계신가요?"></StTextarea>
@@ -143,7 +171,7 @@ const StSendBtn = styled.button`
   width: 22%;
   padding: 0;
   border: 0;
-  border-radius: 7px;
+  border-radius: 10px;
   cursor: pointer;
   background-color: #ffd0d0;
 `;
