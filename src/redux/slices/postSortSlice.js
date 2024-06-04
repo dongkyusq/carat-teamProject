@@ -1,6 +1,5 @@
 // src/redux/postsSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import supabase from "../slices/supabaseClient";
 
 export const fetchPosts = createAsyncThunk("posts/fetchPosts", async filter => {
   let query = supabase.from("posts").select();
@@ -19,7 +18,7 @@ const postsSlice = createSlice({
   name: "posts",
   initialState: {
     posts: [],
-    filter: "최신 게시물 순",
+    filter: "게시물 정렬",
     status: "idle",
     error: null,
   },

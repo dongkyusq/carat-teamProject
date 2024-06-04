@@ -20,8 +20,8 @@ const DropdownPack = () => {
 
   return (
     <NavbarContainer>
-      <p>{filter ? ` ${filter}` : "게시물 정렬"}</p>
-      <NavItem icon={<SvgIcon component={TuneIcon} />} onMenuSelect={handleMenuSelect}>
+      <NavBarP>{filter ? ` ${filter}` : "게시물 정렬"}</NavBarP>
+      <NavItem icon={<TuneIcon style={filterIcon} />} onMenuSelect={handleMenuSelect}>
         <DropdownMenu onMenuSelect={handleMenuSelect} />
       </NavItem>
     </NavbarContainer>
@@ -87,12 +87,12 @@ function DropdownMenu(props) {
   return (
     <Dropdown>
       {activeMenu === "main" && (
-        <div>
+        <DropdownBox>
           <DropdownItem onMenuSelect={props.onMenuSelect}>인기 게시물 순</DropdownItem>
           <DropdownItem onMenuSelect={props.onMenuSelect}>최신 게시물 순</DropdownItem>
           <DropdownItem onMenuSelect={props.onMenuSelect}>오래된 게시물 순</DropdownItem>
           <DropdownItem goToMenu="MbtiList">MBTI별 게시물 순</DropdownItem>
-        </div>
+        </DropdownBox>
       )}
 
       {activeMenu === "MbtiList" && (
@@ -113,8 +113,20 @@ function DropdownMenu(props) {
   );
 }
 
+const filterIcon = {
+  color: "#cc8798",
+};
+
+const NavBarP = styled.p`
+  text-align: center;
+`;
+
+const DropdownBox = styled.div`
+  text-align: center;
+`;
+
 const BackIcon = styled.span`
-  margin: 5px 10px 0 0;
+  margin: 2px 5px 0 0;
 `;
 
 const MenuItem = styled.a`
@@ -134,9 +146,9 @@ const MenuItem = styled.a`
 
 const Dropdown = styled.div`
   position: absolute;
-  top: 135px;
-  left: 380px;
-  width: 140px;
+  top: 40px;
+  left: -162px;
+  width: 205px;
   border-radius: 10px;
   overflow: hidden;
   background-color: white;
@@ -165,6 +177,8 @@ const NavChildren = styled.li`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-left: 170px;
+  position: absolute;
 
   &:hover {
     color: white;
@@ -173,6 +187,8 @@ const NavChildren = styled.li`
 
 const Navbar = styled.nav`
   background-color: transparent;
+  margin-bottom: 180px;
+  margin-top: 0;
 `;
 
 const NavbarItem = styled.ul`
@@ -181,7 +197,7 @@ const NavbarItem = styled.ul`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #ffd0d0;
+  background-color: white;
   border-radius: 10px;
   color: black;
 `;
