@@ -1,31 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import supabase from "../supabaseClient";
 import ProfileEdit from "../components/ProfileEdit";
 
 const MyPage = () => {
-  const dummyData = {
-    nickname: "name",
-    comment: "어렵다...",
-    background: "",
-    profile: "",
-  };
+  const [profile, setProfile] = useState(null);
+  const [editing, setEditing] = useState(false);
 
-  const { userId } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const { data, error } = await supabase.from("user_data").select("*").eq("nickname", userId).single();
+      const { data, error } = await supabase.from("user_data").select("*").eq("email", "test4@gmail.com").single();
       if (error) {
-        console.log("Error fetching profile:", error);
+        console.error("Error fetching profile:", error);
       } else {
         setProfile(data);
       }
     };
     fetchProfile();
-  }, [userId]);
+  }, []);
+
+  const handleSave = updatedProfile => {
+    setProfile(updatedProfile);
+  };
+
+  if (!profile) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <StMainContainer>
@@ -33,19 +37,19 @@ const MyPage = () => {
         <StyledArrowBackIcon onClick={() => navigate("/")} />
       </StHeader>
       <StBackground>
-        <StBackgroundImage src={dummyData.background} alt="Background" />
+        <StBackgroundImage src={profile.background || "default-bg.png"} alt="Background" />
       </StBackground>
       <StProfileContainer>
         <StProfileWrapper>
-          <StProfileImage src={dummyData.profile} alt="Profile" />
+          <StProfileImage src={profile.profile || "default-profile.jpg"} alt="Profile" />
           <StUserInfo>
-            <StUserName>{dummyData.nickname}</StUserName>
-            <StUserId>{dummyData.id}</StUserId>
-            <StUserComment>{dummyData.comment}</StUserComment>
+            <StUserName>{profile.nickname}</StUserName>
+            <StUserComment>{profile.text}</StUserComment>
           </StUserInfo>
         </StProfileWrapper>
-        <StEditProfileButton>프로필수정</StEditProfileButton>
+        <StEditProfileButton onClick={() => setEditing(true)}>프로필 수정</StEditProfileButton>
       </StProfileContainer>
+      {editing && <ProfileEdit profile={profile} onClose={() => setEditing(false)} onSave={handleSave} />}
     </StMainContainer>
   );
 };
@@ -87,6 +91,11 @@ const StBackground = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #ffc0c0;
+  }
 `;
 
 const StBackgroundImage = styled.img`
@@ -120,6 +129,10 @@ const StProfileImage = styled.img`
   background-color: #ffcccc;
   border: 5px solid #1a1a1a;
   margin-right: 20px;
+  &:hover {
+    cursor: pointer;
+    background-color: #ffc0c0;
+  }
 `;
 
 const StUserInfo = styled.div`
@@ -129,11 +142,6 @@ const StUserInfo = styled.div`
 const StUserName = styled.h1`
   font-size: 24px;
   font-weight: bold;
-`;
-
-const StUserId = styled.p`
-  font-size: 18px;
-  color: #aaa;
 `;
 
 const StUserComment = styled.p`
