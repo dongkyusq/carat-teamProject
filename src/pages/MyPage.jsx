@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate, useParams } from "react-router-dom";
-import supabase from "../supabaseClient";
 import ProfileEdit from "../components/ProfileEdit";
 
 const MyPage = () => {
@@ -16,14 +15,17 @@ const MyPage = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
 
-  const [profile, setProfile] = useState(null);
-  const [editing, setEditing] = useState(false);
-
   useEffect(() => {
     const fetchProfile = async () => {
-      const { data, error } = await supabase.from("user_data").select("*").eq();
+      const { data, error } = await supabase.from("user_data").select("*").eq("nickname", userId).single();
+      if (error) {
+        console.log("Error fetching profile:", error);
+      } else {
+        setProfile(data);
+      }
     };
-  });
+    fetchProfile();
+  }, [userId]);
 
   return (
     <StMainContainer>

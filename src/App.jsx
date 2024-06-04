@@ -1,12 +1,12 @@
-import React from "react";
+import { Provider } from "react-redux";
 import Router from "./shared/Router";
-import Layout from "./Layout";
+import store from "./redux/config/configStore";
 
 function App() {
   return (
-    <>
-      <Router></Router>
-    </>
+    <Provider store={store}>
+      <Router />
+    </Provider>
   );
 }
 
