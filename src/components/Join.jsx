@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import Modal from '../pages/Modal';
 import { styled } from 'styled-components';
-import { SupabaseClient } from '@supabase/supabase-js';
+import supabase from '../supabaseClient';
 
 const Join = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,10 +14,10 @@ const Join = () => {
 
   const signUpUser = async (e) => {
     e.preventDefault();
-    const { data, error } = await SupabaseClient.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       name: nameRef.current.value,
       nickname: nicknameRef.current.value,
-      id: idRef.current.value,
+      email: idRef.current.value,
       password: pwRef.current.value,
       confirmpassword: confirmpwRef.current.value,
     });
@@ -47,27 +47,27 @@ const Join = () => {
           <Form>
             <JoinInput>
               <Lable> 이름 * : </Lable>
-              <Input type="text" required />
+              <Input type="text" ref={nameRef} required />
             </JoinInput>
 
             <JoinInput>
               <Lable> 닉네임 * : </Lable>
-              <Input type="text" required />
+              <Input type="text" ref={nicknameRef} required />
             </JoinInput>
 
             <JoinInput>
               <Lable> 아이디 * :  </Lable>
-              <Input type="email" placeholder="이메일 형식으로 입력해주세요" required />
+              <Input type="email" placeholder="이메일 형식으로 입력해주세요" ref={idRef} required />
             </JoinInput>
 
             <JoinInput>
               <Lable> 비밀번호 * :  </Lable>
-              <Input type="password" placeholder="비밀번호를 입력해주세요" required />
+              <Input type="password" placeholder="비밀번호를 입력해주세요" ref={pwRef} required />
             </JoinInput>
 
             <JoinInput>
               <Lable> 비밀번호 확인 * : </Lable>
-              <Input type="password" placeholder="비밀번호를 입력해주세요" required />
+              <Input type="password" placeholder="비밀번호를 입력해주세요" ref={confirmpwRef} required />
             </JoinInput>
 
             <JoinInput>
