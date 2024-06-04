@@ -1,12 +1,15 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Temp from "../pages/Temp";
+import Layout from '../Layout';
 
 const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Temp />} />
+        <Route element={<Layout/>}>
+          <Route index element={<Layout/>}/> 
+          <Route path="*" element={<Layout/>}/> 
+        </Route>
       </Routes>
     </BrowserRouter>
   );
