@@ -8,7 +8,6 @@ import styled from "styled-components";
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import { getInitColorSchemeScript } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 function NewsfeedCreate() {
