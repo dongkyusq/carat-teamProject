@@ -1,4 +1,15 @@
 import { useEffect, useState } from "react";
+import styled from "styled-components";
+
+const WeatherBox = styled.div`
+  flex-shrink: 0;
+  display: block;
+  width: 100%;
+  height: 200px;
+  border-radius: 20px;
+`;
+
+const WeatherInner = styled.div``;
 
 const Weather = () => {
   const [weatherData, setWeatherData] = useState(null);
@@ -32,18 +43,23 @@ const Weather = () => {
     return <div>로딩 중...</div>;
   }
 
+  const temperatureCelsius = (weatherData.main.temp - 273.15).toFixed(2);
+
   return (
-    <div>
-      <p>현재온도 : {(weatherData.main.temp - 273.15).toFixed(2)}°C</p>
-      <p>현재습도 : {weatherData.main.humidity}%</p>
-      <p>날씨 : {weatherData.weather[0].main}</p>
-      <p>상세날씨설명 : {weatherData.weather[0].description}</p>
-      <p>날씨 이미지 : {weatherData.weather[0].icon}</p>
-      <p>바람 : {weatherData.wind.speed} m/s</p>
-      <p>나라 : {weatherData.sys.country}</p>
-      <p>도시이름 : {weatherData.name}</p>
-      <p>구름 : {weatherData.clouds.all}%</p>
-    </div>
+    <WeatherBox>
+      <WeatherInner>
+        <p>KOREA</p>
+        <p>현재온도 : {temperatureCelsius}°C</p>
+        <p>현재습도 : {weatherData.main.humidity}%</p>
+        <p>날씨 : {weatherData.weather[0].main}</p>
+        <p>상세날씨설명 : {weatherData.weather[0].description}</p>
+        {/* <p>날씨 이미지 : {weatherData.weather[0].icon}</p> */}
+        <p>바람 : {weatherData.wind.speed} m/s</p>
+        {/* <p>나라 : {weatherData.sys.country}</p> */}
+        {/* <p>도시이름 : {weatherData.name}</p> */}
+        {/* <p>구름 : {weatherData.clouds.all}%</p> */}
+      </WeatherInner>
+    </WeatherBox>
   );
 };
 
