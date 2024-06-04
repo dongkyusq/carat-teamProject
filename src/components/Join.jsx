@@ -3,9 +3,11 @@ import Modal from '../pages/Modal';
 import { styled } from 'styled-components';
 import { v4 as uuidv4 } from 'uuid'; //yarn add uuid
 import supabase from '../supabaseClient';
+import { useNavigate } from 'react-router-dom';
 
 const Join = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
   const nameRef = useRef();
   const nicknameRef = useRef();
   const idRef = useRef();
@@ -47,10 +49,11 @@ const Join = () => {
         console.log('insertdata:', data);
         alert('회원가입이 완료되었습니다');
         setIsModalOpen(false);
+        navigate('/login');
+
       }
     }
   };
-
 
   const openModal = () => {
     setIsModalOpen(true);

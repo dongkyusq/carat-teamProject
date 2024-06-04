@@ -2,10 +2,11 @@ import React, { useRef, useState } from 'react';
 import Modal from '../pages/Modal';
 import styled from 'styled-components';
 import supabase from '../supabaseClient';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const naviagate = useNavigate();
   const idRef = useRef();
   const pwRef = useRef();
 
@@ -22,6 +23,7 @@ const Login = () => {
       console.log('login: ', data);
       alert('로그인이 완료되었습니다');
       setIsModalOpen(false);
+      naviagate('/');
     }
   }
 
@@ -33,6 +35,9 @@ const Login = () => {
     setIsModalOpen(false);
   };
 
+  const gotoJoin = () => {
+    naviagate('/join');
+  }
 
   return (
     <div>
@@ -50,8 +55,7 @@ const Login = () => {
               <Input type="password" placeholder="비밀번호를 입력하세요" ref={pwRef} required />
             </LoginInput>
             <Button type="submit" onClick={signInUser}>로그인</Button>
-            <SignUp>회원가입</SignUp>
-            {/* 링크 연결 안됨 */}
+            <SignUp onClick={gotoJoin}>회원가입</SignUp>
           </Form>
         </LoginWrapper>
       </Modal>
