@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useNavigate } from "react-router-dom";
 
 const MyPage = () => {
   const dummyData = {
@@ -11,10 +12,12 @@ const MyPage = () => {
     profile: "",
   };
 
+  const navigate = useNavigate();
+
   return (
     <StMainContainer>
       <StHeader>
-        <StyledArrowBackIcon />
+        <StyledArrowBackIcon onClick={() => navigate("/")} />
       </StHeader>
       <StBackground>
         <StBackgroundImage src={dummyData.background} alt="Background" />
@@ -40,8 +43,10 @@ const StMainContainer = styled.div`
   align-items: center;
   background-color: #141233;
   color: #fff;
-  width: 600px;
+  width: 775px;
   margin: 0 auto;
+  border-left: solid 1px #cc8798;
+  border-right: solid 1px #cc8798;
 `;
 
 const StHeader = styled.div`
@@ -81,7 +86,7 @@ const StBackgroundImage = styled.img`
 
 const StProfileContainer = styled.section`
   width: 100%;
-  height: 150px;
+  height: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -120,7 +125,7 @@ const StUserId = styled.p`
 
 const StUserComment = styled.p`
   font-size: 16px;
-  margin-top: 5px;
+  margin-top: 15px;
 `;
 
 const StEditProfileButton = styled.button`
