@@ -107,6 +107,7 @@ const Label = styled.label`
   font-weight: bold;
   margin-bottom: 5px;
   display: inline-block;
+  color: black;
 `;
 
 const Input = styled.input`

@@ -1,9 +1,11 @@
 import Router from "./shared/Router";
+import Layout from './components/Layout';
 
 function App() {
   return (
     <>
-      <Router></Router>
+      <Router>
+      </Router>
     </>
   );
 }
