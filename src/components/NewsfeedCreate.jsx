@@ -69,7 +69,7 @@ function NewsfeedCreate() {
   };
 
   return (
-    <form onSubmit={sendContent}>
+    <StForm onSubmit={sendContent}>
       <StWriteWrap>
         <StTextareaWrap>
           <StExitBtn onClick={goBackPage}>
@@ -89,11 +89,19 @@ function NewsfeedCreate() {
           </StSendBtn>
         </StToolWrap>
       </StWriteWrap>
-    </form>
+    </StForm>
   );
 }
 
 export default NewsfeedCreate;
+
+const StForm = styled.form`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -300px;
+  margin-top: -250px;
+`;
 
 const StWriteWrap = styled.div`
   display: flex;
@@ -101,7 +109,6 @@ const StWriteWrap = styled.div`
   justify-content: center;
   width: 600px;
   height: 500px;
-  margin: 0 auto;
 `;
 const StTextareaWrap = styled.div`
   position: relative;
