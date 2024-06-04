@@ -1,24 +1,15 @@
 import styled from "styled-components";
-import supabase from "../supabaseClient";
-import { useEffect, useState } from "react";
-import CropOriginalIcon from "@mui/icons-material/CropOriginal";
+import { useEffect } from "react";
 import CommentIcon from "@mui/icons-material/Comment";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { useSelector } from "react-redux";
+import { fetchPosts } from "../redux/slices/postSortSlice";
 
 const MainFeed = ({ userInput }) => {
-  const [posts, setPosts] = useState([]);
-  useEffect(() => {
-    const getProducts = async () => {
-      let { data, error } = await supabase.from("posts").select("text_content, likes, user_name, created_at");
-      if (error) {
-        console.log("error", error);
-      } else {
-        console.log("data", data);
-        setPosts(data);
-      }
-    };
+  const posts = useSelector(state => state.posts.posts);
 
-    getProducts();
+  useEffect(() => {
+    fetchPosts();
   }, []);
 
   const formatDate = dateString => {
@@ -31,8 +22,7 @@ const MainFeed = ({ userInput }) => {
     return `${year}년${month}월${day}일 / ${formattedTime}`;
   };
 
-  const filteredPosts = posts.filter(post => post.text_content.toLowerCase().includes((userInput || "").toLowerCase()));
-  console.log("userInput", typeof userInput);
+  const filteredPosts = posts.filter(post => post.text_content.toLowerCase().includes(userInput.toLowerCase()));
 
   return (
     <List>
