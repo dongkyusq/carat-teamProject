@@ -1,16 +1,39 @@
-import React, { useRef } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 
 function NewsfeedCreate() {
-  const text = useRef("");
+  const [postContent, setPostContent] = useState("");
+  const [postImgFile, setPostImgFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState("");
 
-  const sendText = e => {
-    e.preventDefault();
-    console.log(text.current.value);
-    /* 잘 들어온다 */
+  const sendContent = async () => {
+    const { error } = await supabase.from("posts").insert({
+      id: "현재 사용자의 id",
+      imgContent: "게시물 이미지 내용",
+      textContent: "게시물 텍스트 내용",
+      likes: 0,
+      comments: 0,
+    });
+
+    if (error) {
+      console.log("error =>", error);
+      return;
+    }
+  };
+
+  const handleContentChange = e => {
+    setPostContent(e.target.value);
+  };
+
+  const handleImageChange = e => {
+    const fileObj = e.target.files[0];
+    setPostImgFile(fileObj);
+    const objectUrl = URL.createObjectURL(fileObj);
+    setPreviewUrl(objectUrl);
+    console.log(objectUrl);
   };
 
   const uploadImg = e => {
@@ -18,20 +41,21 @@ function NewsfeedCreate() {
   };
 
   return (
-    <form>
+    <form /* onSubmit={sendContent} */>
       <StWriteWrap>
         <StTextareaWrap>
           <StExitBtn>
             <CloseIcon style={stCloseIcon} />
           </StExitBtn>
-          <StTextarea ref={text} placeholder="지금 무슨 생각을 하고 계신가요?"></StTextarea>
+          <StTextarea id="postContent" value={postContent} onChange={handleContentChange} placeholder="지금 무슨 생각을 하고 계신가요?"></StTextarea>
         </StTextareaWrap>
+        <StToolWrap>{previewUrl ? <img src={previewUrl} alt="미리보기 이미지" width={45} /> : <StNoImg>이미지 없음</StNoImg>}</StToolWrap>
         <StToolWrap>
           <StPhotoInputWrap>
             <AddPhotoAlternateIcon style={stPhotoIcon} />
-            <StInput type="file" accept="image/gif, image/jpeg, image/jpg, image/png" />
+            <StInput type="file" id="postImage" accept="image/*" onChange={handleImageChange} />
           </StPhotoInputWrap>
-          <StSendBtn onClick={sendText}>
+          <StSendBtn /* onClick={sendText} */>
             <StSpan>등록하기</StSpan>
             <SendIcon style={stSendIcon} />
           </StSendBtn>
@@ -54,7 +78,7 @@ const StWriteWrap = styled.div`
 const StTextareaWrap = styled.div`
   position: relative;
   width: 100%;
-  height: 85%;
+  height: 71%;
   background-color: #121212;
 `;
 const StExitBtn = styled.button`
@@ -93,8 +117,14 @@ const StToolWrap = styled.div`
   height: 14%;
   padding: 10px;
   border-top: 1px solid #fefefe80;
+  text-align: center;
   box-sizing: border-box;
   background-color: #121212;
+  color: #fefefe80;
+`;
+const StNoImg = styled.p`
+  width: 100%;
+  line-height: 49px;
 `;
 const StPhotoInputWrap = styled.label`
   position: relative;
