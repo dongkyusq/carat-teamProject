@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react'
 import Modal from '../pages/Modal';
 import { styled } from 'styled-components';
+import { v4 as uuidv4 } from 'uuid';
 import supabase from '../supabaseClient';
 
 const Join = () => {
@@ -11,7 +12,6 @@ const Join = () => {
   const pwRef = useRef();
   const confirmpwRef = useRef();
 
-
   const signUpUser = async (e) => {
     e.preventDefault();
     const { data, error } = await supabase.auth.signUp({
@@ -20,12 +20,13 @@ const Join = () => {
       email: idRef.current.value,
       password: pwRef.current.value,
       confirmpassword: confirmpwRef.current.value,
+      id: uuidv4(),
     });
 
     if (error) {
       console.log(error);
     } else {
-      console.log(data);
+      console.log('authdata:', data);
     }
 
     const user = data.user;
@@ -37,12 +38,13 @@ const Join = () => {
           email: idRef.current.value,
           password: pwRef.current.value,
           confirmpassword: confirmpwRef.current.value,
+          id: uuidv4(),
         }
       ]);
       if (insertError) {
         console.log(insertError);
       } else {
-        console.log(data);
+        console.log('insertdata:', data);
         alert('회원가입이 완료되었습니다');
         setIsModalOpen(false);
       }

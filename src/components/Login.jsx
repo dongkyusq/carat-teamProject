@@ -1,10 +1,27 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Modal from '../pages/Modal';
 import styled from 'styled-components';
-import Join from './Join';
+import supabase from '../supabaseClient';
 
 const Login = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const idRef = useRef();
+  const pwRef = useRef();
+
+  const signInUser = async (e) => {
+    e.preventDefault();
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: idRef.current.value,
+      password: pwRef.current.value,
+    });
+
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('login: ', data);
+    }
+  }
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -15,8 +32,6 @@ const Login = () => {
   };
 
 
-  //로그인해야지만 모달 닫히게 
-
   return (
     <div>
       <Button onClick={openModal}>로그인</Button>
@@ -26,13 +41,13 @@ const Login = () => {
           <Form>
             <LoginInput>
               <Label>아이디:</Label>
-              <Input type="email" placeholder="아이디를 입력하세요" required />
+              <Input type="email" placeholder="아이디를 입력하세요" ref={idRef} required />
             </LoginInput>
             <LoginInput>
               <Label>비밀번호:</Label>
-              <Input type="password" placeholder="비밀번호를 입력하세요" required />
+              <Input type="password" placeholder="비밀번호를 입력하세요" ref={pwRef} required />
             </LoginInput>
-            <Button type="submit">로그인</Button>
+            <Button type="submit" onClick={signInUser}>로그인</Button>
             <SignUp>회원가입</SignUp>
             {/* 링크 연결 안됨 */}
           </Form>
