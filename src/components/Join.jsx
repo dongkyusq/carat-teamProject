@@ -27,6 +27,26 @@ const Join = () => {
     } else {
       console.log(data);
     }
+
+    const user = data.user;
+    if (user) {
+      const { error: insertError } = await supabase.from('user_data').insert([
+        {
+          name: nameRef.current.value,
+          nickname: nicknameRef.current.value,
+          email: idRef.current.value,
+          password: pwRef.current.value,
+          confirmpassword: confirmpwRef.current.value,
+        }
+      ]);
+      if (insertError) {
+        console.log(insertError);
+      } else {
+        console.log(data);
+        alert('회원가입이 완료되었습니다');
+        setIsModalOpen(false);
+      }
+    }
   };
 
 
