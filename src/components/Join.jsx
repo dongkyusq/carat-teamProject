@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import Modal from '../pages/Modal';
 import { styled } from 'styled-components';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'; //yarn add uuid
 import supabase from '../supabaseClient';
 
 const Join = () => {
