@@ -3,15 +3,26 @@ import styled from "styled-components";
 import { SvgIcon } from "@mui/material";
 import TuneIcon from "@mui/icons-material/Tune";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPosts, setFilter } from "../redux/slices/postSortSlice";
 
 const DropdownPack = () => {
-  const [selectedMenu, setSelectedMenu] = useState(null);
+  const dispatch = useDispatch();
+  const filter = useSelector(state => state.posts.filter);
+
+  useEffect(() => {
+    dispatch(fetchPosts(filter));
+  }, [dispatch, filter]);
+
+  const handleMenuSelect = menu => {
+    dispatch(setFilter(menu));
+  };
 
   return (
     <NavbarContainer>
-      <p>{selectedMenu ? ` ${selectedMenu}` : "게시물 정렬"}</p>
-      <NavItem icon={<SvgIcon component={TuneIcon} />} onMenuSelect={setSelectedMenu}>
-        <DropdownMenu onMenuSelect={setSelectedMenu} />
+      <p>{filter ? ` ${filter}` : "게시물 정렬"}</p>
+      <NavItem icon={<SvgIcon component={TuneIcon} />} onMenuSelect={handleMenuSelect}>
+        <DropdownMenu onMenuSelect={handleMenuSelect} />
       </NavItem>
     </NavbarContainer>
   );
