@@ -1,6 +1,7 @@
 import styled from "styled-components";
-import { supabase } from "../supabaseClient";
-import { useEffect, useState } from "react";
+import { fetchPosts } from "../redux/slices/postSortSlice";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const List = styled.ul`
   display: flex;
@@ -55,23 +56,13 @@ const FeedContent = styled.div`
 `;
 
 const MainFeed = ({ userInput }) => {
-  const [posts, setPosts] = useState([]);
-  useEffect(() => {
-    const getProducts = async () => {
-      let { data, error } = await supabase.from("posts").select("text_content, likes, user_name");
-      if (error) {
-        console.log("error", error);
-      } else {
-        console.log("data", data);
-        setPosts(data);
-      }
-    };
+  const posts = useSelector(state => state.posts.posts);
 
-    getProducts();
+  useEffect(() => {
+    fetchPosts();
   }, []);
 
-  const filteredPosts = posts.filter(post => post.text_content.toLowerCase().includes((userInput || "").toLowerCase()));
-  console.log("userInput", typeof userInput);
+  const filteredPosts = posts.filter(post => post.text_content.toLowerCase().includes(userInput.toLowerCase()));
 
   return (
     <List>
