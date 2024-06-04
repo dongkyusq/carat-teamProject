@@ -18,6 +18,7 @@ const GlobalStyle = createGlobalStyle`
     font-size: 18px;
     background: #141233;
     color: #fff;
+    padding: 0 30px
   }
 `;
 
