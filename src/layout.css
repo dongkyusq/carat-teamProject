@@ -96,7 +96,6 @@ body {
     display: flex;
     flex-flow: column nowrap;
     justify-content: space-between;
-    height: calc(100% - 40px);
     padding: 20px;
 }
 
@@ -241,7 +240,7 @@ body {
     width: 100%;
 }
 
-.rightBox .rightBoxInner .weatherBox { 
+.weatherBox { 
     flex-shrink: 0;
     display: block;
     width: 100%;
@@ -250,16 +249,16 @@ body {
     border-radius: 20px;
 }
 
-.rightBox .copyRight { 
+.copyRight { 
     flex-shrink: 0;
     padding: 50px 30px;
     align-items: center;
     text-align: center;
 }
 
-.rightBox .copyRight p { 
+.copyRight p { 
     font-size: 12px;
 }
-.rightBox .copyRight p:nth-child(1) { 
+.copyRight p:nth-child(1) { 
     margin-bottom: 20px;
 }
