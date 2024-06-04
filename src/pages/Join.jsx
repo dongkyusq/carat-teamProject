@@ -1,9 +1,34 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import Modal from './Modal';
 import { styled } from 'styled-components';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 const Join = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const nameRef = useRef();
+    const nicknameRef = useRef();
+    const idRef = useRef();
+    const pwRef = useRef();
+    const confirmpwRef = useRef();
+
+
+    const signUpUser = async (e) => {
+        e.preventDefault();
+        const { data, error } = await SupabaseClient.auth.signUp({
+            name: nameRef.current.value,
+            nickname: nicknameRef.current.value,
+            id: idRef.current.value,
+            password: pwRef.current.value,
+            confirmpassword: confirmpwRef.current.value,
+        });
+
+        if (error) {
+            console.log(error);
+        } else {
+            console.log(data);
+        }
+    };
+
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -50,14 +75,14 @@ const Join = () => {
                             <Input type="text" placeholder="대문자로 입력해주세요" required />
                         </JoinInput>
 
-                        <Text> *는 핋수 </Text>
-                        <Button type="submit">회원가입</Button>
+                        <Text> *는 필수 </Text>
+                        <Button type="submit" onClick={signUpUser}>회원가입</Button>
                     </Form>
                 </JoinWrapper>
             </Modal>
         </div>
     )
-}
+};
 
 export default Join;
 

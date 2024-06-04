@@ -14,6 +14,7 @@ const Login = () => {
     setIsModalOpen(false);
   };
 
+
   //로그인해야지만 모달 닫히게 
 
   return (
@@ -33,6 +34,7 @@ const Login = () => {
             </LoginInput>
             <Button type="submit">로그인</Button>
             <SignUp>회원가입</SignUp>
+            {/* 링크 연결 안됨 */}
           </Form>
         </LoginWrapper>
       </Modal>
