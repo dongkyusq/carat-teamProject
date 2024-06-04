@@ -1,6 +1,6 @@
 // src/redux/postsSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { supabase } from "../../supabaseClient";
+import supabase from "../../supabaseClient";
 
 export const fetchPosts = createAsyncThunk("posts/fetchPosts", async filter => {
   let query = supabase.from("posts").select();

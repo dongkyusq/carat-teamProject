@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { fetchPosts } from "../redux/slices/postSortSlice";
-import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const List = styled.ul`
   display: flex;
