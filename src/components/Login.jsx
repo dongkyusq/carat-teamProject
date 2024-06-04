@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Modal from './Modal';
+import Modal from '../pages/Modal';
 import styled from 'styled-components';
 import Join from './Join';
 
