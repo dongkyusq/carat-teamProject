@@ -42,7 +42,7 @@ function Search() {
 
   useEffect(() => {
     const getProducts = async () => {
-      let { data, error } = await supabase.from("posts").select("text_content");
+      let { data, error } = await supabase.from("posts").select("text_content, likes");
       if (error) {
         console.log("error", error);
       } else {
@@ -54,7 +54,7 @@ function Search() {
     getProducts();
   }, []);
 
-  const filteredPosts = posts.filter(post => post.text_content.toLowerCase().includes(userInput.toLowerCase()));
+  const filteredPosts = posts.filter(post => post.text_content.toLowerCase().includes(userInput.toLowerCase())).sort((a, b) => b.likes - a.likes);
 
   return (
     <div>
@@ -64,7 +64,10 @@ function Search() {
         </FormStyle>
         <div>
           {filteredPosts.map((post, index) => (
-            <div key={index}>{post.text_content}</div>
+            <div key={index}>
+              {post.text_content}
+              {/* {post.likes} */}
+            </div>
           ))}
         </div>
       </ExpenseItemList>
