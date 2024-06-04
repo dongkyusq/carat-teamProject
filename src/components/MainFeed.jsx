@@ -9,7 +9,7 @@ const MainFeed = ({ userInput }) => {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
     const getProducts = async () => {
-      let { data, error } = await supabase.from("posts").select("text_content, likes, user_name");
+      let { data, error } = await supabase.from("posts").select("text_content, likes, user_name, created_at");
       if (error) {
         console.log("error", error);
       } else {
@@ -21,6 +21,16 @@ const MainFeed = ({ userInput }) => {
     getProducts();
   }, []);
 
+  const formatDate = dateString => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    const options = { hour: "2-digit", minute: "2-digit" };
+    const formattedTime = date.toLocaleTimeString("ko-KR", options);
+    return `${year}년${month}월${day}일 / ${formattedTime}`;
+  };
+
   const filteredPosts = posts.filter(post => post.text_content.toLowerCase().includes((userInput || "").toLowerCase()));
   console.log("userInput", typeof userInput);
 
@@ -31,13 +41,11 @@ const MainFeed = ({ userInput }) => {
           <UserInfo>
             <UserImg src="/src/assets/User.jpg" alt="User" />
             <UserName>{post.user_name}</UserName>
+            <TimeBox>{formatDate(post.created_at)}</TimeBox>
           </UserInfo>
           <FeedContent>
             <Posts>{post.text_content}</Posts>
             <IconListBox>
-              <Button>
-                <CropOriginalIcon style={photoIcon} />
-              </Button>
               <Button>
                 <CommentIcon style={commentIcon} />
               </Button>
@@ -52,17 +60,17 @@ const MainFeed = ({ userInput }) => {
   );
 };
 
+const TimeBox = styled.p`
+  margin-left: 10px;
+  font-size: 13px;
+  color: #b7bec4;
+`;
+
 const Button = styled.button`
   border: 0;
   background-color: transparent;
   cursor: pointer;
 `;
-
-const photoIcon = {
-  fontSize: "43px",
-  marginTop: "-2px",
-  color: "white",
-};
 
 const commentIcon = {
   fontSize: "40px",
