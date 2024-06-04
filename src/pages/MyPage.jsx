@@ -1,18 +1,29 @@
 import React from "react";
 import styled from "styled-components";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import supabase from "../supabaseClient";
+import ProfileEdit from "../components/ProfileEdit";
 
 const MyPage = () => {
   const dummyData = {
     nickname: "name",
-    id: "@id__",
     comment: "어렵다...",
     background: "",
     profile: "",
   };
 
+  const { userId } = useParams();
   const navigate = useNavigate();
+
+  const [profile, setProfile] = useState(null);
+  const [editing, setEditing] = useState(false);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const { data, error } = await supabase.from("user_data").select("*").eq();
+    };
+  });
 
   return (
     <StMainContainer>
