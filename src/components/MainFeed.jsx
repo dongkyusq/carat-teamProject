@@ -8,7 +8,7 @@ import { fetchPosts } from "../redux/slices/postSortSlice";
 const MainFeed = ({ userInput }) => {
   const dispatch = useDispatch();
   const posts = useSelector(state => state.posts.posts);
-  const filter = useSelector(state => state.posts.filter);
+  const filter = useSelector(state => state.posts.filter) || "게시물정렬";
 
   useEffect(() => {
     dispatch(fetchPosts(filter));

@@ -1,17 +1,28 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import supabase from "../../supabaseClient";
+
+const MBTI_TYPES = ["ISTJ", "ISFJ", "INFJ", "INTJ", "ISTP", "ISFP", "INFP", "INTP", "ESTP", "ESFP", "ENFP", "ENTP", "ESTJ", "ESFJ", "ENFJ", "ENTJ"];
+
 export const fetchPosts = createAsyncThunk("posts/fetchPosts", async filter => {
-  let query = supabase.from("posts").select();
+  let postsQuery = supabase.from("posts").select();
+
   if (filter === "인기 게시물 순") {
-    query = query.order("likes", { ascending: false, nullsLast: true });
+    postsQuery = postsQuery.order("likes", { ascending: false, nullsLast: true });
   } else if (filter === "최신 게시물 순") {
-    query = query.order("created_at", { ascending: false });
+    postsQuery = postsQuery.order("created_at", { ascending: false });
   } else if (filter === "오래된 게시물 순") {
-    query = query.order("created_at", { ascending: true });
+    postsQuery = postsQuery.order("created_at", { ascending: true });
+  } else if (MBTI_TYPES.includes(filter)) {
+    postsQuery = postsQuery.eq("mbti", filter);
   }
-  const { data } = await query;
-  return data;
+
+  const [postData] = await Promise.all([postsQuery]);
+
+  console.log("Posts data:", postData);
+
+  return { posts: postData.data };
 });
+
 const postsSlice = createSlice({
   name: "posts",
   initialState: {
@@ -32,7 +43,7 @@ const postsSlice = createSlice({
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.posts = action.payload;
+        state.posts = action.payload.posts;
       })
       .addCase(fetchPosts.rejected, (state, action) => {
         state.status = "failed";
@@ -40,5 +51,6 @@ const postsSlice = createSlice({
       });
   },
 });
+
 export const { setFilter } = postsSlice.actions;
 export default postsSlice.reducer;
