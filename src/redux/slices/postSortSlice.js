@@ -1,9 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import supabase from "../../supabaseClient";
-
-export const fetchPosts = createAsyncThunk("posts/fetchPosts", async ({ filter }) => {
+export const fetchPosts = createAsyncThunk("posts/fetchPosts", async filter => {
   let query = supabase.from("posts").select();
-
   if (filter === "인기 게시물 순") {
     query = query.order("likes", { ascending: false, nullsLast: true });
   } else if (filter === "최신 게시물 순") {
@@ -11,11 +9,9 @@ export const fetchPosts = createAsyncThunk("posts/fetchPosts", async ({ filter }
   } else if (filter === "오래된 게시물 순") {
     query = query.order("created_at", { ascending: true });
   }
-
   const { data } = await query;
   return data;
 });
-
 const postsSlice = createSlice({
   name: "posts",
   initialState: {
@@ -44,7 +40,5 @@ const postsSlice = createSlice({
       });
   },
 });
-
 export const { setFilter } = postsSlice.actions;
-
 export default postsSlice.reducer;
