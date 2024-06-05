@@ -5,7 +5,7 @@ import supabase from "../../supabaseClient";
 export const fetchPosts = createAsyncThunk("posts/fetchPosts", async filter => {
   let query = supabase.from("posts").select();
   if (filter === "인기 게시물 순") {
-    query = query.order("likes", { ascending: false });
+    query = query.order("likes", { ascending: false, nullsLast: true });
   } else if (filter === "최신 게시물 순") {
     query = query.order("created_at", { ascending: false });
   } else if (filter === "오래된 게시물 순") {

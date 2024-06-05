@@ -1,16 +1,22 @@
 import styled from "styled-components";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import CommentIcon from "@mui/icons-material/Comment";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchPosts } from "../redux/slices/postSortSlice";
+import CommentModal from "./CommentModal";
 
 const MainFeed = ({ userInput }) => {
+  const dispatch = useDispatch();
   const posts = useSelector(state => state.posts.posts);
+  const filter = useSelector(state => state.posts.filter);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
 
   useEffect(() => {
-    fetchPosts();
-  }, []);
+    dispatch(fetchPosts(filter));
+  }, [dispatch, filter]);
 
   const formatDate = dateString => {
     const date = new Date(dateString);
@@ -22,33 +28,68 @@ const MainFeed = ({ userInput }) => {
     return `${year}년${month}월${day}일 / ${formattedTime}`;
   };
 
-  const filteredPosts = posts.filter(post => post.text_content.toLowerCase().includes(userInput.toLowerCase()));
+  const handleCommentClick = post => {
+    setSelectedPost(post);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedPost(null);
+  };
+
+  const filteredPosts = posts
+    .filter(post => post.text_content.toLowerCase().includes(userInput.toLowerCase()))
+    .sort((a, b) => {
+      if (filter === "인기 게시물 순") {
+        if (a.likes === null) return 1;
+        if (b.likes === null) return -1;
+        return b.likes - a.likes;
+      }
+      return 0;
+    });
 
   return (
-    <List>
-      {filteredPosts.map((post, index) => (
-        <ListItem key={index}>
-          <UserInfo>
-            <UserImg src="/src/assets/User.jpg" alt="User" />
-            <UserName>{post.user_name}</UserName>
-            <TimeBox>{formatDate(post.created_at)}</TimeBox>
-          </UserInfo>
-          <FeedContent>
-            <Posts>{post.text_content}</Posts>
-            <IconListBox>
-              <Button>
-                <CommentIcon style={commentIcon} />
-              </Button>
-              <Button>
-                <FavoriteBorderIcon style={likeIcon} />
-              </Button>
-            </IconListBox>
-          </FeedContent>
-        </ListItem>
-      ))}
-    </List>
+    <>
+      <List>
+        {filteredPosts.map((post, index) => (
+          <ListItem key={index}>
+            <UserInfo>
+              <UserImg src="/src/assets/User.jpg" alt="User" />
+              <UserName>{post.user_name}</UserName>
+              <TimeBox>{formatDate(post.created_at)}</TimeBox>
+            </UserInfo>
+            <FeedContent>
+              <Posts>{post.text_content}</Posts>
+              <IconListBox>
+                <Button onClick={() => handleCommentClick(post)}>
+                  <CommentIcon sx={{ fontSize: "30px", color: "white", "&:hover": { color: "#f8cacc" } }} />
+                </Button>
+                <Button>
+                  <FavoriteBorderIcon sx={{ fontSize: "30px", color: "white", "&:hover": { color: "#f8cacc" } }} />
+                  <LikesCount>{post.likes}</LikesCount>
+                </Button>
+              </IconListBox>
+            </FeedContent>
+          </ListItem>
+        ))}
+      </List>
+      <CommentModal isOpen={isModalOpen} onClose={handleCloseModal}>
+        {selectedPost && (
+          <div>
+            <p>{selectedPost.text_content}</p>
+          </div>
+        )}
+      </CommentModal>
+    </>
   );
 };
+
+const LikesCount = styled.p`
+  margin: 4px 0 0 2px;
+  font-size: 20px;
+  color: white;
+`;
 
 const TimeBox = styled.p`
   margin-left: 10px;
@@ -60,21 +101,13 @@ const Button = styled.button`
   border: 0;
   background-color: transparent;
   cursor: pointer;
+  display: flex;
 `;
-
-const commentIcon = {
-  fontSize: "40px",
-  color: "white",
-};
-
-const likeIcon = {
-  fontSize: "40px",
-  color: "white",
-};
 
 const IconListBox = styled.div`
   display: flex;
   margin: 0 0 5px 15px;
+  gap: 10px;
 `;
 
 const List = styled.ul`
@@ -127,7 +160,7 @@ const Posts = styled.div`
   margin: 10px;
   padding: 20px;
   background: #ffd0d0;
-  border-radius: 20px;
+  border-radius: 15px;
   color: #000;
   word-wrap: break-word;
   word-break: keep-all;
