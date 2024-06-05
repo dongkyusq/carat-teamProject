@@ -1,6 +1,68 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import DropdownPack from "./DropdownPack";
+import Login from "./Login";
+import { useState } from "react";
+import supabase from "../supabaseClient";
+
+const LeftBox = () => {
+  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 추가
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태 추가
+
+  const goPostPage = () => {
+    navigate("/post"); // 새글 등록창으로 이동
+  };
+
+  const navigateToHome = () => {
+    navigate(-1);
+  };
+
+  const signOutUser = async () => {
+    const { data, error } = await supabase.auth.signOut();
+    console.log("signout: ", { data, error });
+
+    if (!error) {
+      setIsLoggedIn(false);
+      alert('로그아웃이 완료되었습니다');
+    } else {
+      console.log(error);
+    }
+  };
+
+  const handlebtnClick = () => {
+    if (isLoggedIn) {
+      signOutUser();
+    } else {
+      setIsModalOpen(true);
+    }
+  };
+
+
+  return (
+    <Box>
+      <BoxInner>
+        <Logo onClick={navigateToHome}>
+          <LogoImg src="/src/assets/logo.png" alt="News Feed Logo" width="100%" height="100%" />
+        </Logo>
+        <UserBox>
+          <UserInfo>
+            <UserImg src="public\img\profileLogo.png" alt="Login" />
+            <UserName>{isLoggedIn ? '환영합니다!' : '반갑습니다!'}</UserName>
+          </UserInfo>
+          <LoginBtn onClick={handlebtnClick}>
+            {isLoggedIn ? '로그아웃' : '로그인'}
+          </LoginBtn>
+        </UserBox>
+        <DropdownPack />
+        <PostButton onClick={goPostPage}>새글 등록하기</PostButton>
+      </BoxInner>
+      <Login isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} setIsLoggedIn={setIsLoggedIn} /> {/* Login 컴포넌트에 props 전달 */}
+    </Box>
+  );
+};
+
+export default LeftBox;
 
 const Box = styled.div`
   width: 295px;
@@ -93,42 +155,3 @@ const UserBox = styled.div`
   margin-top: -50px;
   margin-bottom: -140px;
 `;
-
-const LeftBox = () => {
-  const navigate = useNavigate();
-
-  const goPostPage = () => {
-    navigate("/post"); // 새글 등록창으로 이동
-  };
-
-  const navigateToHome = () => {
-    navigate(-1);
-  };
-
-  return (
-    <Box>
-      <BoxInner>
-        <Logo onClick={navigateToHome}>
-          <LogoImg src="/src/assets/logo.png" alt="News Feed Logo" width="100%" height="100%" />
-        </Logo>
-        <Login />
-        <DropdownPack />
-        <PostButton onClick={goPostPage}>새글 등록하기</PostButton>
-      </BoxInner>
-    </Box>
-  );
-};
-
-const Login = () => {
-  return (
-    <UserBox>
-      <UserInfo>
-        <UserImg src="public\img\profileLogo.png" alt="Login" />
-        <UserName>로그인이 필요합니다.</UserName>
-      </UserInfo>
-      <LoginBtn>로그인</LoginBtn>
-    </UserBox>
-  );
-};
-
-export default LeftBox;
