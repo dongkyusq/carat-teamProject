@@ -10,6 +10,10 @@ const List = styled.ul`
   flex-grow: 1;
   overflow-y: auto;
   margin-bottom: ${props => props.$marginBottom || "unset"};
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const ListItem = styled.li`

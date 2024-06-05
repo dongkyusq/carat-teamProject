@@ -21,7 +21,7 @@ const DropdownPack = () => {
   return (
     <NavbarContainer>
       <NavBarP>{filter ? ` ${filter}` : "게시물 정렬"}</NavBarP>
-      <NavItem icon={<TuneIcon style={filterIcon} />} onMenuSelect={handleMenuSelect}>
+      <NavItem icon={<TuneIcon sx={{ color: "#141233", fontSize: "25px", marginLeft: "110px", marginTop: "-2px", "&:hover": { color: "#f8cacc" } }} />} onMenuSelect={handleMenuSelect}>
         <DropdownMenu onMenuSelect={handleMenuSelect} />
       </NavItem>
     </NavbarContainer>
