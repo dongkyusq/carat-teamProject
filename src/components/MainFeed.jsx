@@ -13,11 +13,17 @@ const fetchPosts = async () => {
   return data;
 };
 
+const fetchLikes = async userId => {
+  const { data, error } = await supabase.from("likes").select("likes_post_id").eq("likes_user_id", userId);
+  if (error) {
+    console.log("Error fetching likes:", error);
+  }
+  return data;
+};
+
 const MainFeed = ({ userInput }) => {
   const [posts, setPosts] = useState([]);
   const currentUser = useSelector(state => state.user?.currentUser);
-
-  const [likes, setLikes] = useState(0);
   const [likedPosts, setLikedPosts] = useState([]);
 
   useEffect(() => {
@@ -27,6 +33,16 @@ const MainFeed = ({ userInput }) => {
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const fetchUserLikes = async () => {
+      if (currentUser && currentUser.id) {
+        const likes = await fetchLikes(currentUser.id);
+        setLikedPosts(likes.map(like => like.likes_post_id));
+      }
+    };
+    fetchUserLikes();
+  }, [currentUser]);
 
   const formatDate = dateString => {
     const date = new Date(dateString);
@@ -51,17 +67,12 @@ const MainFeed = ({ userInput }) => {
       return;
     }
 
-    const { data, error } = await supabase.from("likes").insert([{ post_id: post.id, user_id: currentUser.id }]);
+    const { data, error } = await supabase.from("likes").insert([{ likes_post_id: post.id, likes_user_id: currentUser.id }]);
 
     if (error) {
-      console.log("error =>", error);
+      console.log("Error inserting like:", error);
     } else {
       setLikedPosts([...likedPosts, post.id]);
-      setLikes(likes + 1);
-
-      console.log(post.likes);
-      console.log("data", data);
-      console.log("id", post.id);
     }
   };
 
