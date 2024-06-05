@@ -18,13 +18,8 @@ const Join = () => {
   const signUpUser = async (e) => {
     e.preventDefault();
     const { data, error } = await supabase.auth.signUp({
-      name: nameRef.current.value,
-      nickname: nicknameRef.current.value,
       email: idRef.current.value,
       password: pwRef.current.value,
-      confirmpassword: confirmpwRef.current.value,
-      id: uuidv4(),
-      mbti: mbtiRef.current.value,
     });
 
     if (error) {
@@ -42,7 +37,7 @@ const Join = () => {
           email: idRef.current.value,
           password: pwRef.current.value,
           confirmpassword: confirmpwRef.current.value,
-          id: uuidv4(),
+          id: data.user.id,
           mbti: mbtiRef.current.value,
         }
       ]);
