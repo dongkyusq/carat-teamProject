@@ -13,6 +13,7 @@ const Join = () => {
   const idRef = useRef();
   const pwRef = useRef();
   const confirmpwRef = useRef();
+  const mbtiRef = useRef();
 
   const signUpUser = async (e) => {
     e.preventDefault();
@@ -23,6 +24,7 @@ const Join = () => {
       password: pwRef.current.value,
       confirmpassword: confirmpwRef.current.value,
       id: uuidv4(),
+      mbti: mbtiRef.current.value,
     });
 
     if (error) {
@@ -41,6 +43,7 @@ const Join = () => {
           password: pwRef.current.value,
           confirmpassword: confirmpwRef.current.value,
           id: uuidv4(),
+          mbti: mbtiRef.current.value,
         }
       ]);
       if (insertError) {
@@ -97,7 +100,7 @@ const Join = () => {
 
             <JoinInput>
               <Lable> MBTI * :  </Lable>
-              <Input type="text" placeholder="대문자로 입력해주세요" required />
+              <Input type="text" placeholder="대문자로 입력해주세요" ref={mbtiRef} required />
             </JoinInput>
 
             <Text> *는 필수 </Text>
