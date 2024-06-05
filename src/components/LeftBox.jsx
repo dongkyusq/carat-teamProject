@@ -27,6 +27,11 @@ const LeftBox = () => {
     navigate(-1);
   };
 
+  const navigateToMyPage = () => {
+    // mypage로 이동
+    navigate("/mypage");
+  };
+
   const signOutUser = async () => {
     const { data, error } = await supabase.auth.signOut();
     console.log("signout: ", { data, error });
@@ -71,7 +76,7 @@ const LeftBox = () => {
         </Logo>
         <UserBox>
           <UserInfo>
-            <UserImg src="public\img\profileLogo.png" alt="Login" />
+            <UserImg src="public\img\profileLogo.png" alt="Login" onClick={navigateToMyPage} />
             <UserName>{isLoggedIn ? "환영합니다!" : "반갑습니다!"}</UserName>
           </UserInfo>
           <LoginBtn onClick={handlebtnClick}>{isLoggedIn ? "로그아웃" : "로그인"}</LoginBtn>
@@ -142,6 +147,7 @@ const UserImg = styled.img`
   background: #f8cacc;
   width: 50px;
   height: 50px;
+  cursor: pointer;
 `;
 
 const UserName = styled.span`
