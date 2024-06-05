@@ -48,9 +48,10 @@ function NewsfeedCreate() {
     } = await supabase.auth.getUser();
     const { data: user_data, error } = await supabase.from("user_data").select("nickname").eq("id", user.id);
     if (error) {
-      return console.log("error =>", error);
+      alert("닉네임이 존재하지 않습니다. 현재 계정을 삭제 후 다시 생성하여 주십시오.");
+      return;
     }
-    return user_data[0].nickname;
+    return [user_data[0].nickname, user];
   }
 
   const sendContent = async e => {
@@ -65,16 +66,16 @@ function NewsfeedCreate() {
       return;
     }
 
-    const userNickname = await getUserNickname();
+    const [userNickname, user] = await getUserNickname();
 
     if (postImgFile) {
       // 사용자가 이미지 선택 했을 때
       uploadFile(postImgFile).then(img_content => {
         createPost({
-          id: uuidv4(),
           img_content,
           text_content: postContent,
           user_name: userNickname,
+          user_id: user.id,
         }).then(([newPost]) => {
           dispatch(addPost(newPost));
           resetImg();
@@ -85,9 +86,9 @@ function NewsfeedCreate() {
     }
     // 이미지 선택 안했을 때
     createPost({
-      id: uuidv4(),
       text_content: postContent,
       user_name: userNickname,
+      user_id: user.id,
     }).then(([newPost]) => {
       dispatch(addPost(newPost));
       resetImg();
