@@ -8,11 +8,10 @@ const ProfileEdit = ({ profile, onClose, onSave }) => {
 
   const handleSave = async () => {
     const { data, error } = await supabase.from("user_data").update({ nickname, text }).eq("id", profile.id);
-
+    console.log(data);
     if (error) {
       console.error("Error updating profile:", error);
     } else {
-      console.log("Updated profile data:", data);
       onSave({ ...profile, nickname, text });
       onClose();
     }

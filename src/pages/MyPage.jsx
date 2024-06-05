@@ -14,6 +14,7 @@ const MyPage = () => {
 
   const navigate = useNavigate();
 
+  // 프로필 데이터 조회
   useEffect(() => {
     const fetchProfile = async () => {
       const {
@@ -24,24 +25,20 @@ const MyPage = () => {
         if (error) {
           console.error("Error fetching profile:", error);
         } else {
-          console.log("Fetched profile:", data);
           setProfile(data);
         }
       } else {
-        navigate("/login");
+        navigate("/login"); // 로그인되지 않은 경우 로그인 페이지로 이동
       }
     };
     fetchProfile();
   }, [navigate]);
 
   const handleSave = async updatedProfile => {
-    console.log("Updating profile with:", updatedProfile);
     const { error } = await supabase.from("user_data").update(updatedProfile).eq("id", profile.id);
-
     if (error) {
       console.error("Error updating profile:", error);
     } else {
-      console.log("Profile updated successfully");
       setProfile(updatedProfile);
       setEditing(false);
     }
@@ -49,20 +46,17 @@ const MyPage = () => {
 
   const handleImageUpload = async (url, type) => {
     const updatedProfile = { ...profile, [type]: url };
-    console.log("Updating profile image with:", updatedProfile);
     const { error } = await supabase.from("user_data").update(updatedProfile).eq("id", profile.id);
-
     if (error) {
       console.error("Error updating profile with image URL:", error);
     } else {
-      console.log("Profile image updated successfully");
       setProfile(updatedProfile);
     }
     setUploading(false);
   };
 
   if (!profile) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
 
   return (
@@ -90,7 +84,7 @@ const MyPage = () => {
           />
           <StUserInfo>
             <StUserName>{profile.nickname}</StUserName>
-            <StUserComment>{profile.text || ""}</StUserComment>
+            <StUserComment>{profile.text}</StUserComment>
           </StUserInfo>
         </StProfileWrapper>
         <StEditProfileButton onClick={() => setEditing(true)}>닉네임 및 상태메시지 변경</StEditProfileButton>
