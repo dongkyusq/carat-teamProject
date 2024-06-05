@@ -3,6 +3,8 @@ import styled from "styled-components";
 import DropdownPack from "./DropdownPack";
 import Login from "./Login";
 import { useEffect, useState } from "react";
+import { getId } from "../API/authkeep";
+
 import supabase from "../supabaseClient";
 
 const LeftBox = () => {
@@ -40,15 +42,6 @@ const LeftBox = () => {
   };
 
   //로그인 유지
-  const getId = async () => {
-    const { data, error } = await supabase.auth.getSession();
-    if (error) {
-      console.log("getid Error:", error);
-      return null;
-    }
-    return data?.session?.user?.id || null;
-  };
-
   useEffect(() => {
     const checkLoginStatus = async () => {
       const userId = await getId();
@@ -62,7 +55,7 @@ const LeftBox = () => {
     checkLoginStatus();
   }, []);
 
-  // console.log(isLoggedIn);
+  console.log(isLoggedIn);
 
   return (
     <Box>
