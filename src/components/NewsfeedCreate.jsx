@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import { createPost } from "../API/posts";
@@ -9,6 +9,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { useNavigate } from "react-router-dom";
+import supabase from "../supabaseClient";
 
 function NewsfeedCreate() {
   const [postContent, setPostContent] = useState("");
@@ -39,9 +40,18 @@ function NewsfeedCreate() {
     const objectUrl = URL.createObjectURL(fileObj);
     imgObj.current = objectUrl;
     setPreviewUrl(objectUrl);
-    console.log(typeof objectUrl);
-    console.log(objectUrl);
   };
+
+  async function getUserNickname() {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    const { data: user_data, error } = await supabase.from("user_data").select("nickname").eq("id", user.id);
+    if (error) {
+      return console.log("error =>", error);
+    }
+    return user_data[0].nickname;
+  }
 
   const sendContent = async e => {
     e.preventDefault();
@@ -55,6 +65,8 @@ function NewsfeedCreate() {
       return;
     }
 
+    const userNickname = await getUserNickname();
+
     if (postImgFile) {
       // 사용자가 이미지 선택 했을 때
       uploadFile(postImgFile).then(img_content => {
@@ -62,6 +74,7 @@ function NewsfeedCreate() {
           id: uuidv4(),
           img_content,
           text_content: postContent,
+          user_name: userNickname,
         }).then(([newPost]) => {
           dispatch(addPost(newPost));
           resetImg();
@@ -74,6 +87,7 @@ function NewsfeedCreate() {
     createPost({
       id: uuidv4(),
       text_content: postContent,
+      user_name: userNickname,
     }).then(([newPost]) => {
       dispatch(addPost(newPost));
       resetImg();
