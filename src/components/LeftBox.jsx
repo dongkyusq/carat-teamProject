@@ -12,8 +12,14 @@ const LeftBox = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 추가
   const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태 추가
 
-
-  const goPostPage = () => {
+  const goPostPage = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      alert("로그인한 유저만 게시물을 작성할 수 있습니다.");
+      return;
+    }
     navigate("/post"); // 새글 등록창으로 이동
   };
 
@@ -27,7 +33,7 @@ const LeftBox = () => {
 
     if (!error) {
       setIsLoggedIn(false);
-      alert('로그아웃이 완료되었습니다');
+      alert("로그아웃이 완료되었습니다");
     } else {
       console.log(error);
     }
@@ -66,11 +72,9 @@ const LeftBox = () => {
         <UserBox>
           <UserInfo>
             <UserImg src="public\img\profileLogo.png" alt="Login" />
-            <UserName>{isLoggedIn ? '환영합니다!' : '반갑습니다!'}</UserName>
+            <UserName>{isLoggedIn ? "환영합니다!" : "반갑습니다!"}</UserName>
           </UserInfo>
-          <LoginBtn onClick={handlebtnClick}>
-            {isLoggedIn ? '로그아웃' : '로그인'}
-          </LoginBtn>
+          <LoginBtn onClick={handlebtnClick}>{isLoggedIn ? "로그아웃" : "로그인"}</LoginBtn>
         </UserBox>
         <DropdownPack />
         <PostButton onClick={goPostPage}>새글 등록하기</PostButton>
