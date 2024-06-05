@@ -20,8 +20,6 @@ function NewsfeedCreate() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(() => {}, []);
-
   const resetImg = useCallback(() => {
     setPostImgFile(null);
     setPreviewUrl("");
@@ -41,6 +39,7 @@ function NewsfeedCreate() {
     const objectUrl = URL.createObjectURL(fileObj);
     imgObj.current = objectUrl;
     setPreviewUrl(objectUrl);
+    console.log(typeof objectUrl);
     console.log(objectUrl);
   };
 
@@ -54,7 +53,6 @@ function NewsfeedCreate() {
           id: uuidv4(),
           img_content,
           text_content: postContent,
-          user_name: "작성자 이름",
         }).then(([newPost]) => {
           dispatch(addPost(newPost));
           resetImg();
@@ -78,7 +76,6 @@ function NewsfeedCreate() {
 
   const cancelImgFile = imgObj => {
     event.preventDefault();
-    console.log(imgObj.current);
     URL.revokeObjectURL(imgObj.current); // 문제 : 삭제 후 같은 이미지를 다시 올리는 작업이 불가하다
     resetImg();
   };
@@ -99,12 +96,12 @@ function NewsfeedCreate() {
         </StTextareaWrap>
         <StToolWrap>
           {previewUrl ? (
-            <div>
+            <StImgPreview>
               <img src={previewUrl} alt="미리보기 이미지" width={45} />
-              <StCancelBtn onClick={cancelImgFile}>
+              <StCancelBtn onClick={() => cancelImgFile(imgObj)}>
                 <CloseIcon style={stCancelIcon} />
               </StCancelBtn>
-            </div>
+            </StImgPreview>
           ) : (
             <StNoImg>이미지 없음</StNoImg>
           )}
@@ -133,7 +130,6 @@ const StForm = styled.form`
   margin-left: -300px;
   margin-top: -250px;
 `;
-
 const StCancelBtn = styled.button`
   margin-left: 10px;
 
@@ -145,12 +141,6 @@ const StCancelBtn = styled.button`
   border: 0;
   background-color: #fefefe7a;
 `;
-
-const stCancelIcon = {
-  fontSize: "1rem",
-  marginLeft: "-5px",
-};
-
 const StWriteWrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -235,6 +225,11 @@ const StSpan = styled.span`
   font-size: 1rem;
   font-weight: 700;
 `;
+const StImgPreview = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const stCloseIcon = {
   fontSize: "1.4rem",
@@ -251,4 +246,8 @@ const stPhotoIcon = {
 const stSendIcon = {
   fontSize: "1rem",
   marginTop: "2px",
+};
+const stCancelIcon = {
+  fontSize: "1rem",
+  marginLeft: "-5px",
 };
