@@ -3,8 +3,8 @@ import supabase from "../supabaseClient";
 import styled from "styled-components";
 
 const ProfileEdit = ({ profile, onClose, onSave }) => {
-  const [nickname, setNickname] = useState(profile.nickname);
-  const [text, setText] = useState(profile.text);
+  const [nickname, setNickname] = useState(profile.nickname || "");
+  const [text, setText] = useState(profile.text || "");
 
   const handleSave = async () => {
     const { data, error } = await supabase.from("user_data").update({ nickname, text }).eq("id", profile.id);
@@ -12,6 +12,7 @@ const ProfileEdit = ({ profile, onClose, onSave }) => {
     if (error) {
       console.error("Error updating profile:", error);
     } else {
+      console.log("Updated profile data:", data);
       onSave({ ...profile, nickname, text });
       onClose();
     }

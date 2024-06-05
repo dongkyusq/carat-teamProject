@@ -16,22 +16,32 @@ const MyPage = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const { data, error } = await supabase.from("user_data").select("*").eq("email", "test4@gmail.com").single();
-      if (error) {
-        console.error("Error fetching profile:", error);
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        const { data, error } = await supabase.from("user_data").select("*").eq("id", user.id).single();
+        if (error) {
+          console.error("Error fetching profile:", error);
+        } else {
+          console.log("Fetched profile:", data);
+          setProfile(data);
+        }
       } else {
-        setProfile(data);
+        navigate("/login");
       }
     };
     fetchProfile();
-  }, []);
+  }, [navigate]);
 
   const handleSave = async updatedProfile => {
-    const { error } = await supabase.from("user_data").update(updatedProfile).eq("email", "test4@gmail.com");
+    console.log("Updating profile with:", updatedProfile);
+    const { error } = await supabase.from("user_data").update(updatedProfile).eq("id", profile.id);
 
     if (error) {
       console.error("Error updating profile:", error);
     } else {
+      console.log("Profile updated successfully");
       setProfile(updatedProfile);
       setEditing(false);
     }
@@ -39,18 +49,20 @@ const MyPage = () => {
 
   const handleImageUpload = async (url, type) => {
     const updatedProfile = { ...profile, [type]: url };
-    const { error } = await supabase.from("user_data").update(updatedProfile).eq("email", profile.email);
+    console.log("Updating profile image with:", updatedProfile);
+    const { error } = await supabase.from("user_data").update(updatedProfile).eq("id", profile.id);
 
     if (error) {
       console.error("Error updating profile with image URL:", error);
     } else {
+      console.log("Profile image updated successfully");
       setProfile(updatedProfile);
     }
     setUploading(false);
   };
 
   if (!profile) {
-    return <div></div>;
+    return <div>Loading...</div>;
   }
 
   return (
@@ -78,7 +90,7 @@ const MyPage = () => {
           />
           <StUserInfo>
             <StUserName>{profile.nickname}</StUserName>
-            <StUserComment>{profile.text}</StUserComment>
+            <StUserComment>{profile.text || ""}</StUserComment>
           </StUserInfo>
         </StProfileWrapper>
         <StEditProfileButton onClick={() => setEditing(true)}>닉네임 및 상태메시지 변경</StEditProfileButton>
