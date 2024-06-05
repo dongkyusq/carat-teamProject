@@ -83,8 +83,8 @@ const LoginWrapper = styled.div`
   background-color: #CC8798;
   padding: 20px;
   border-radius: 15px;
-  width: 800px;
-  height: 800px;
+  width: 700px;
+  height: 700px;
   margin: 0 auto;
   position: relative;
 `;
@@ -95,8 +95,8 @@ const Circle = styled.div`
   background-color: #FFD0D0;
   border-radius: 50%;
   position: absolute;
-  top: -25px;
-  left: -25px; 
+  top: -24px;
+  left: -24px; 
   z-index: 1;
 `;
 
@@ -107,8 +107,8 @@ const Form = styled.form`
   padding: 25px;
   background-color: white;
   border-radius: 15px;
-  width: 700px;
-  height: 700px;
+  width: 600px;
+  height: 600px;
   justify-content: center;
 `;
 
