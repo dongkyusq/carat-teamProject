@@ -1,18 +1,14 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import CommentIcon from "@mui/icons-material/Comment";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPosts } from "../redux/slices/postSortSlice";
-import CommentModal from "./CommentModal";
 
 const MainFeed = ({ userInput }) => {
   const dispatch = useDispatch();
   const posts = useSelector(state => state.posts.posts);
   const filter = useSelector(state => state.posts.filter);
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPost, setSelectedPost] = useState(null);
 
   useEffect(() => {
     dispatch(fetchPosts(filter));
@@ -28,16 +24,6 @@ const MainFeed = ({ userInput }) => {
     return `${year}년${month}월${day}일 / ${formattedTime}`;
   };
 
-  const handleCommentClick = post => {
-    setSelectedPost(post);
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedPost(null);
-  };
-
   const filteredPosts = posts
     .filter(post => post.text_content.toLowerCase().includes(userInput.toLowerCase()))
     .sort((a, b) => {
@@ -50,38 +36,29 @@ const MainFeed = ({ userInput }) => {
     });
 
   return (
-    <>
-      <List>
-        {filteredPosts.map((post, index) => (
-          <ListItem key={index}>
-            <UserInfo>
-              <UserImg src="/src/assets/User.jpg" alt="User" />
-              <UserName>{post.user_name}</UserName>
-              <TimeBox>{formatDate(post.created_at)}</TimeBox>
-            </UserInfo>
-            <FeedContent>
-              <Posts>{post.text_content}</Posts>
-              <IconListBox>
-                <Button onClick={() => handleCommentClick(post)}>
-                  <CommentIcon sx={{ fontSize: "30px", color: "white", "&:hover": { color: "#f8cacc" } }} />
-                </Button>
-                <Button>
-                  <FavoriteBorderIcon sx={{ fontSize: "30px", color: "white", "&:hover": { color: "#f8cacc" } }} />
-                  <LikesCount>{post.likes}</LikesCount>
-                </Button>
-              </IconListBox>
-            </FeedContent>
-          </ListItem>
-        ))}
-      </List>
-      <CommentModal isOpen={isModalOpen} onClose={handleCloseModal}>
-        {selectedPost && (
-          <div>
-            <p>{selectedPost.text_content}</p>
-          </div>
-        )}
-      </CommentModal>
-    </>
+    <List>
+      {filteredPosts.map((post, index) => (
+        <ListItem key={index}>
+          <UserInfo>
+            <UserImg src="/src/assets/User.jpg" alt="User" />
+            <UserName>{post.user_name}</UserName>
+            <TimeBox>{formatDate(post.created_at)}</TimeBox>
+          </UserInfo>
+          <FeedContent>
+            <Posts>{post.text_content}</Posts>
+            <IconListBox>
+              <Button>
+                <CommentIcon sx={{ fontSize: "30px", color: "white", "&:hover": { color: "#f8cacc" } }} />
+              </Button>
+              <Button>
+                <FavoriteBorderIcon sx={{ fontSize: "30px", color: "white", "&:hover": { color: "#f8cacc" } }} />
+                <LikesCount>{post.likes}</LikesCount>
+              </Button>
+            </IconListBox>
+          </FeedContent>
+        </ListItem>
+      ))}
+    </List>
   );
 };
 
