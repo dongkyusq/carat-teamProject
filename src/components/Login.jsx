@@ -3,6 +3,7 @@ import Modal from '../pages/Modal';
 import styled from 'styled-components';
 import supabase from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
+import CloseIcon from '@mui/icons-material/Close';
 
 const Login = ({ isModalOpen, setIsModalOpen, setIsLoggedIn }) => {
   const navigate = useNavigate();
@@ -37,8 +38,11 @@ const Login = ({ isModalOpen, setIsModalOpen, setIsLoggedIn }) => {
 
   return (
     <div>
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
+      <Modal isOpen={isModalOpen}>
         <LoginWrapper>
+          <CloseIconWrapper onClick={closeModal}>
+            <CloseIcon />
+          </CloseIconWrapper>
           <Circle />
           <Form>
             <LoginInput>
@@ -143,4 +147,17 @@ const SignUp = styled.div`
   &:hover {
     text-decoration: underline;
   }
+`;
+
+const CloseIconWrapper = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  font-size: 20px;
+
+&:hover {
+  transform: scale(1.2) translateY(-2px);
+}
 `;
