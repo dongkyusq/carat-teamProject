@@ -21,9 +21,10 @@ const MyPage = () => {
         data: { user },
       } = await supabase.auth.getUser();
       if (user) {
+        // 배열이 아닌 id 객체만 받기 위해 single() 메서드 사용
         const { data, error } = await supabase.from("user_data").select("*").eq("id", user.id).single();
         if (error) {
-          console.error("Error fetching profile:", error);
+          console.error("fetching 에러:", error);
         } else {
           setProfile(data);
         }
@@ -34,24 +35,21 @@ const MyPage = () => {
     fetchProfile();
   }, [navigate]);
 
+  // 프로필 저장 핸들러
   const handleSave = async updatedProfile => {
     const { error } = await supabase.from("user_data").update(updatedProfile).eq("id", profile.id);
     if (error) {
-      console.error("Error updating profile:", error);
+      console.error("프로필 업데이트 에러:", error);
     } else {
       setProfile(updatedProfile);
       setEditing(false);
     }
   };
 
+  // 이미지 업로드 핸들러
   const handleImageUpload = async (url, type) => {
     const updatedProfile = { ...profile, [type]: url };
-    const { error } = await supabase.from("user_data").update(updatedProfile).eq("id", profile.id);
-    if (error) {
-      console.error("Error updating profile with image URL:", error);
-    } else {
-      setProfile(updatedProfile);
-    }
+    handleSave(updatedProfile);
     setUploading(false);
   };
 

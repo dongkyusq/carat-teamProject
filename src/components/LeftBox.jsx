@@ -12,7 +12,14 @@ const LeftBox = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 추가
   const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태 추가
 
-  const goPostPage = () => {
+  const goPostPage = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      alert("로그인한 유저만 게시물을 작성할 수 있습니다.");
+      return;
+    }
     navigate("/post"); // 새글 등록창으로 이동
   };
 
