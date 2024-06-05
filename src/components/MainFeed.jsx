@@ -14,7 +14,7 @@ const fetchPosts = async () => {
 };
 
 const fetchLikes = async userId => {
-  const { data, error } = await supabase.from("likes").select("likes_post_id").eq("likes_user_id", userId);
+  const { data, error } = await supabase.from("likes").select("likes_post").eq("likes_user_id", userId);
   if (error) {
     console.log("Error fetching likes:", error);
   }
@@ -67,7 +67,7 @@ const MainFeed = ({ userInput }) => {
       return;
     }
 
-    const { data, error } = await supabase.from("likes").insert([{ likes_post_id: post.id, likes_user_id: currentUser.id }]);
+    const { data, error } = await supabase.from("likes").insert([{ likes_post: post.id, likes_user_id: currentUser.id }]);
 
     if (error) {
       console.log("Error inserting like:", error);

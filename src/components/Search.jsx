@@ -3,7 +3,9 @@ import styled from "styled-components";
 import supabase from "../supabaseClient";
 import MainFeed from "./MainFeed";
 
-const SearchBox = styled.form`
+const SearchBox = styled.form.attrs(props => ({
+  searchfocus: props.searchfocus.toString(),
+}))`
   flex-shrink: 0;
   position: relative;
   margin-bottom: 30px;
@@ -14,6 +16,7 @@ const SearchBox = styled.form`
     border: 0;
     border-radius: 30px;
     padding: 0 10px 0 40px;
+    ${props => props.searchfocus && "border: 1px solid #000;"}/* 수정된 부분: searchfocus에 따른 스타일 적용 */
   }
 
   & > button {
@@ -60,8 +63,9 @@ function Search({ userInput, setUserInput }) {
   return (
     <>
       <div>
-        <SearchBox onSubmit={searchClick}>
-          <input type="text" placeholder="Search" onChange={searchData} onFocus={() => setSearchfocus(true)} onBlur={() => setSearchfocus(false)} searchfocus={searchfocus} />
+        <SearchBox onSubmit={searchClick} searchfocus={searchfocus}>
+          {" "}
+          <input type="text" placeholder="Search" onChange={searchData} onFocus={() => setSearchfocus(true)} onBlur={() => setSearchfocus(false)} />
           <button>
             <svg id="fi_3031293" enableBackground="new 0 0 461.516 461.516" height="20" viewBox="0 0 461.516 461.516" width="20" xmlns="http://www.w3.org/2000/svg">
               <g>
