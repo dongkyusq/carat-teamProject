@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react'
 import Modal from '../pages/Modal';
 import { styled } from 'styled-components';
-import { v4 as uuidv4 } from 'uuid'; //yarn add uuid
 import supabase from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,13 +17,8 @@ const Join = () => {
   const signUpUser = async (e) => {
     e.preventDefault();
     const { data, error } = await supabase.auth.signUp({
-      name: nameRef.current.value,
-      nickname: nicknameRef.current.value,
       email: idRef.current.value,
       password: pwRef.current.value,
-      confirmpassword: confirmpwRef.current.value,
-      id: uuidv4(),
-      mbti: mbtiRef.current.value,
     });
 
     if (error) {
@@ -41,8 +35,7 @@ const Join = () => {
           nickname: nicknameRef.current.value,
           email: idRef.current.value,
           password: pwRef.current.value,
-          confirmpassword: confirmpwRef.current.value,
-          id: uuidv4(),
+          id: data.user.id,
           mbti: mbtiRef.current.value,
         }
       ]);
@@ -52,7 +45,7 @@ const Join = () => {
         console.log('insertdata:', data);
         alert('회원가입이 완료되었습니다');
         setIsModalOpen(false);
-        navigate('/login');
+        navigate('/');
 
       }
     }
