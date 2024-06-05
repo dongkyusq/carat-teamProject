@@ -2,13 +2,14 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import DropdownPack from "./DropdownPack";
 import Login from "./Login";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import supabase from "../supabaseClient";
 
 const LeftBox = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 추가
   const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태 추가
+
 
   const goPostPage = () => {
     navigate("/post"); // 새글 등록창으로 이동
@@ -38,6 +39,30 @@ const LeftBox = () => {
     }
   };
 
+  //로그인 유지
+  const getId = async () => {
+    const { data, error } = await supabase.auth.getSession();
+    if (error) {
+      console.log("getid Error:", error);
+      return null;
+    }
+    return data?.session?.user?.id || null;
+  };
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const userId = await getId();
+      if (userId) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
+
+  // console.log(isLoggedIn);
 
   return (
     <Box>
