@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import Search from "./components/Search";
-import PopularPost from "./components/PopularPost";
-import MainFeed from "./components/MainFeed";
+import Search from "./Search";
+import PopularPost from "./PopularPost";
+import MainFeed from "./MainFeed";
 import { useState } from "react";
-import Weather from "./components/Weather";
+import Weather from "./Weather";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -89,64 +89,64 @@ const CopyRight = styled.div`
 `;
 
 const LeftBox = () => {
-  return (
-    <Box $width="15%" $minWidth="250px">
-      <BoxInner>
-        <Logo>
-          <img src="/src/assets/logo.png" alt="News Feed Logo" width="100%" height="100%" />
-        </Logo>
-        <Login />
-        <PostButton>새글 등록하기</PostButton>
-      </BoxInner>
-    </Box>
-  );
+    return (
+        <Box $width="15%" $minWidth="250px">
+            <BoxInner>
+                <Logo>
+                    <img src="/src/assets/logo.png" alt="News Feed Logo" width="100%" height="100%" />
+                </Logo>
+                <Login />
+                <PostButton>새글 등록하기</PostButton>
+            </BoxInner>
+        </Box>
+    );
 };
 
 const Login = () => {
-  return (
-    <LoginBox>
-      <UserInfo>
-        <UserImg src="/src/assets/User.jpg" alt="Login" />
-        <UserName>로그인을 하세요</UserName>
-      </UserInfo>
-    </LoginBox>
-  );
+    return (
+        <LoginBox>
+            <UserInfo>
+                <UserImg src="/src/assets/User.jpg" alt="Login" />
+                <UserName>로그인을 하세요</UserName>
+            </UserInfo>
+        </LoginBox>
+    );
 };
 
 const FeedBox = ({ userInput }) => {
-  return (
-    <Box $width="65%">
-      <BoxInner>
-        <MainFeed userInput={userInput} />
-      </BoxInner>
-    </Box>
-  );
+    return (
+        <Box $width="65%">
+            <BoxInner>
+                <MainFeed userInput={userInput} />
+            </BoxInner>
+        </Box>
+    );
 };
 
 const RightBox = ({ userInput, setUserInput }) => {
-  return (
-    <Box $width="20%" $minWidth="350px">
-      <BoxInner>
-        <Search userInput={userInput} setUserInput={setUserInput} />
-        <PopularPost />
-        <Weather />
-        <CopyRight>
-          <p>박채수 윤새라 이성찬 양동규 유수지 이녕수</p>
-          <p>copyright ⓒ 2024 캐럿 All right reserved.</p>
-        </CopyRight>
-      </BoxInner>
-    </Box>
-  );
+    return (
+        <Box $width="20%" $minWidth="350px">
+            <BoxInner>
+                <Search userInput={userInput} setUserInput={setUserInput} />
+                <PopularPost />
+                <Weather />
+                <CopyRight>
+                    <p>박채수 윤새라 이성찬 양동규 유수지 이녕수</p>
+                    <p>copyright ⓒ 2024 캐럿 All right reserved.</p>
+                </CopyRight>
+            </BoxInner>
+        </Box>
+    );
 };
 
 export default function Layout() {
-  const [userInput, setUserInput] = useState("");
+    const [userInput, setUserInput] = useState("");
 
-  return (
-    <LayoutContainer>
-      <LeftBox />
-      <FeedBox userInput={userInput} setUserInput={setUserInput} />
-      <RightBox userInput={userInput} setUserInput={setUserInput} />
-    </LayoutContainer>
-  );
+    return (
+        <LayoutContainer>
+            <LeftBox />
+            <FeedBox userInput={userInput} setUserInput={setUserInput} />
+            <RightBox userInput={userInput} setUserInput={setUserInput} />
+        </LayoutContainer>
+    );
 }
