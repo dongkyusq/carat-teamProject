@@ -1,20 +1,13 @@
 import React, { useState } from "react";
-import supabase from "../supabaseClient";
 import styled from "styled-components";
 
 const ProfileEdit = ({ profile, onClose, onSave }) => {
   const [nickname, setNickname] = useState(profile.nickname || "");
   const [text, setText] = useState(profile.text || "");
 
-  const handleSave = async () => {
-    const { data, error } = await supabase.from("user_data").update({ nickname, text }).eq("id", profile.id);
-    console.log(data);
-    if (error) {
-      console.error("Error updating profile:", error);
-    } else {
-      onSave({ ...profile, nickname, text });
-      onClose();
-    }
+  const handleSaveClick = () => {
+    onSave({ ...profile, nickname, text });
+    onClose();
   };
 
   return (
@@ -34,7 +27,7 @@ const ProfileEdit = ({ profile, onClose, onSave }) => {
           </label>
         </ModalBody>
         <ModalFooter>
-          <button onClick={handleSave}>저장</button>
+          <button onClick={handleSaveClick}>저장</button>
           <button onClick={onClose}>취소</button>
         </ModalFooter>
       </ModalContent>
