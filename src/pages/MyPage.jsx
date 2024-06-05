@@ -95,8 +95,10 @@ const StMainContainer = styled.div`
   align-items: center;
   background-color: #141233;
   color: #fff;
-  width: 775px;
+  width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
+  padding: 0 20px;
   border-left: solid 1px #cc8798;
   border-right: solid 1px #cc8798;
 `;
@@ -122,14 +124,12 @@ const StyledArrowBackIcon = styled(ArrowBackIcon)`
 const StBackground = styled.div`
   width: 100%;
   height: 200px;
-  background-color: #444;
   display: flex;
   justify-content: center;
   align-items: center;
 
   &:hover {
     cursor: pointer;
-    background-color: #ffc0c0;
   }
 `;
 
@@ -137,8 +137,6 @@ const StBackgroundImage = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
 `;
 
 const StProfileContainer = styled.section`
@@ -161,12 +159,11 @@ const StProfileImage = styled.img`
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  background-color: #ffcccc;
   border: 5px solid #1a1a1a;
   margin-right: 20px;
+
   &:hover {
     cursor: pointer;
-    background-color: #ffc0c0;
   }
 `;
 
