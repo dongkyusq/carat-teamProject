@@ -4,10 +4,13 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
 import supabase from "../supabaseClient";
 import ProfileEdit from "../components/ProfileEdit";
+import ImageUploadModal from "../components/ImageUploadModal";
 
 const MyPage = () => {
   const [profile, setProfile] = useState(null);
   const [editing, setEditing] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadType, setUploadType] = useState("");
 
   const navigate = useNavigate();
 
@@ -23,8 +26,27 @@ const MyPage = () => {
     fetchProfile();
   }, []);
 
-  const handleSave = updatedProfile => {
-    setProfile(updatedProfile);
+  const handleSave = async updatedProfile => {
+    const { error } = await supabase.from("user_data").update(updatedProfile).eq("email", "test4@gmail.com");
+
+    if (error) {
+      console.error("Error updating profile:", error);
+    } else {
+      setProfile(updatedProfile);
+      setEditing(false);
+    }
+  };
+
+  const handleImageUpload = async (url, type) => {
+    const updatedProfile = { ...profile, [type]: url };
+    const { error } = await supabase.from("user_data").update(updatedProfile).eq("email", profile.email);
+
+    if (error) {
+      console.error("Error updating profile with image URL:", error);
+    } else {
+      setProfile(updatedProfile);
+    }
+    setUploading(false);
   };
 
   if (!profile) {
@@ -36,20 +58,33 @@ const MyPage = () => {
       <StHeader>
         <StyledArrowBackIcon onClick={() => navigate("/")} />
       </StHeader>
-      <StBackground>
+      <StBackground
+        onClick={() => {
+          setUploadType("background");
+          setUploading(true);
+        }}
+      >
         <StBackgroundImage src={profile.background || "default-bg.png"} alt="Background" />
       </StBackground>
       <StProfileContainer>
         <StProfileWrapper>
-          <StProfileImage src={profile.profile || "default-profile.jpg"} alt="Profile" />
+          <StProfileImage
+            onClick={() => {
+              setUploadType("profile");
+              setUploading(true);
+            }}
+            src={profile.profile || "default-profile.jpg"}
+            alt="Profile"
+          />
           <StUserInfo>
             <StUserName>{profile.nickname}</StUserName>
             <StUserComment>{profile.text}</StUserComment>
           </StUserInfo>
         </StProfileWrapper>
-        <StEditProfileButton onClick={() => setEditing(true)}>프로필 수정</StEditProfileButton>
+        <StEditProfileButton onClick={() => setEditing(true)}>닉네임 및 상태메시지 변경</StEditProfileButton>
       </StProfileContainer>
       {editing && <ProfileEdit profile={profile} onClose={() => setEditing(false)} onSave={handleSave} />}
+      {uploading && <ImageUploadModal onClose={() => setUploading(false)} onSave={handleImageUpload} type={uploadType} />}
     </StMainContainer>
   );
 };
