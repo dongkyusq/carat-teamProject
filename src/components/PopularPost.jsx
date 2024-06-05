@@ -35,7 +35,10 @@ const UserImg = styled.img`
 `;
 
 const UserName = styled.span`
-  font-size: ${props => props.$fontSize || "18px"};
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 `;
 
 const RecentContent = styled.div`

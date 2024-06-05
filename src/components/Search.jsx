@@ -27,30 +27,6 @@ const SearchBox = styled.form`
   }
 `;
 
-const ExpenseItemList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  border-radius: 4%;
-`;
-
-const InputStyle = styled.input`
-  border-radius: 20px;
-  padding: 10px;
-  width: 300px;
-  font-size: 16px;
-  background-color: ${props => (props.searchfocus ? "#ffff" : "#ffff")};
-  outline: none;
-  border: ${props => (props.searchfocus ? "1px solid #000" : "1px solid #000 ")};
-`;
-
-const FormStyle = styled.form`
-  display: flex;
-  align-items: center;
-  position: relative;
-  margin-top: 10px;
-`;
-
 function Search({ userInput, setUserInput }) {
   const [searchfocus, setSearchfocus] = useState(false);
   const [posts, setPosts] = useState([]);
@@ -95,14 +71,6 @@ function Search({ userInput, setUserInput }) {
           </button>
         </SearchBox>
       </div>
-
-      {/* <div>
-        <ExpenseItemList>
-          <FormStyle onSubmit={searchClick}>
-            <InputStyle onChange={searchData} onFocus={() => setSearchfocus(true)} onBlur={() => setSearchfocus(false)} searchfocus={searchfocus} type="text" placeholder="🔍︎검색" />
-          </FormStyle>
-        </ExpenseItemList>
-      </div> */}
     </>
   );
 }

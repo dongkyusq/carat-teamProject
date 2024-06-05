@@ -1,15 +1,31 @@
 import styled from "styled-components";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import CommentIcon from "@mui/icons-material/Comment";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useSelector } from "react-redux";
-import { fetchPosts } from "../redux/slices/postSortSlice";
+import supabase from "../supabaseClient";
+
+const fetchPosts = async () => {
+  const { data, error } = await supabase.from("posts").select("*");
+  if (error) {
+    console.log("Error fetching posts:", error);
+  }
+  return data;
+};
 
 const MainFeed = ({ userInput }) => {
-  const posts = useSelector(state => state.posts.posts);
+  const [posts, setPosts] = useState([]);
+  const currentUser = useSelector(state => state.user?.currentUser);
+
+  const [likes, setLikes] = useState(0);
+  const [likedPosts, setLikedPosts] = useState([]);
 
   useEffect(() => {
-    fetchPosts();
+    const fetchData = async () => {
+      const posts = await fetchPosts();
+      setPosts(posts || []);
+    };
+    fetchData();
   }, []);
 
   const formatDate = dateString => {
@@ -19,10 +35,35 @@ const MainFeed = ({ userInput }) => {
     const day = date.getDate().toString().padStart(2, "0");
     const options = { hour: "2-digit", minute: "2-digit" };
     const formattedTime = date.toLocaleTimeString("ko-KR", options);
-    return `${year}년${month}월${day}일 / ${formattedTime}`;
+    return `${year}년 ${month}월 ${day}일 / ${formattedTime}`;
   };
 
   const filteredPosts = posts.filter(post => post.text_content.toLowerCase().includes(userInput.toLowerCase()));
+
+  const handleAdd = async post => {
+    if (!currentUser || !currentUser.id) {
+      alert("로그인 후 좋아요를 누를 수 있습니다.");
+      return;
+    }
+
+    if (likedPosts.includes(post.id)) {
+      alert("이미 좋아요를 눌렀습니다.");
+      return;
+    }
+
+    const { data, error } = await supabase.from("likes").insert([{ post_id: post.id, user_id: currentUser.id }]);
+
+    if (error) {
+      console.log("error =>", error);
+    } else {
+      setLikedPosts([...likedPosts, post.id]);
+      setLikes(likes + 1);
+
+      console.log(post.likes);
+      console.log("data", data);
+      console.log("id", post.id);
+    }
+  };
 
   return (
     <List>
@@ -39,7 +80,7 @@ const MainFeed = ({ userInput }) => {
               <Button>
                 <CommentIcon style={commentIcon} />
               </Button>
-              <Button>
+              <Button onClick={() => handleAdd(post)}>
                 <FavoriteBorderIcon style={likeIcon} />
               </Button>
             </IconListBox>
@@ -84,7 +125,7 @@ const List = styled.ul`
   height: 100%;
   flex-grow: 1;
   overflow-y: auto;
-  margin-bottom: ${props => props.$marginBottom || "unset"};
+  margin-bottom: unset;
 
   &::-webkit-scrollbar {
     display: none;
@@ -94,7 +135,7 @@ const List = styled.ul`
 const ListItem = styled.li`
   display: flex;
   flex-flow: column nowrap;
-  margin-bottom: ${props => props.$marginBottom || "50px"};
+  margin-bottom: 50px;
 `;
 
 const UserInfo = styled.div`
@@ -102,19 +143,19 @@ const UserInfo = styled.div`
   flex-flow: row nowrap;
   align-items: center;
   text-align: center;
-  margin-bottom: ${props => props.$marginBottom || "20px"};
+  margin-bottom: 20px;
 `;
 
 const UserImg = styled.img`
   border-radius: 100%;
   background: #f8cacc;
-  width: ${props => props.$width || "50px"};
-  height: ${props => props.$height || "50px"};
-  margin-right: ${props => props.$marginRight || "15px"};
+  width: 50px;
+  height: 50px;
+  margin-right: 15px;
 `;
 
 const UserName = styled.span`
-  font-size: ${props => props.$fontSize || "18px"};
+  font-size: 18px;
 `;
 
 const FeedContent = styled.div`
