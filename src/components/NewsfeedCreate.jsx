@@ -46,6 +46,15 @@ function NewsfeedCreate() {
   const sendContent = async e => {
     e.preventDefault();
 
+    if (!confirm("작성된 내용을 게시할까요?")) {
+      return;
+    }
+
+    if (!postContent) {
+      alert("작성된 내용이 없습니다.");
+      return;
+    }
+
     if (postImgFile) {
       // 사용자가 이미지 선택 했을 때
       uploadFile(postImgFile).then(img_content => {
