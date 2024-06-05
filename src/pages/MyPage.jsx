@@ -19,9 +19,12 @@ const MyPage = () => {
     const fetchProfile = async () => {
       const {
         data: { user },
-      } = await supabase.auth.getUser();
+      } = await supabase.auth.user_data();
       if (user) {
-        const { data, error } = await supabase.from("user_data").select("*").eq("id", user.id).single();
+        //로그인 시에 토큰
+        //가져온 정보 리덕스에 저장
+        //my_page에선 useSelector 통해 유저정보 가져온 후 정보 기반 보여주기, 업데이트 하기
+        const { data, error } = await supabase.from("user_data").select("*").eq("id", user.id);
         if (error) {
           console.error("Error fetching profile:", error);
         } else {
