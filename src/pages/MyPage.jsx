@@ -29,7 +29,7 @@ const MyPage = () => {
           setProfile(data);
         }
       } else {
-        navigate("/login"); // 로그인되지 않은 경우 로그인 페이지로 이동
+        navigate("/"); // 로그인되지 않은 경우 메인 페이지로 이동
       }
     };
     fetchProfile();
