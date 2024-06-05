@@ -50,7 +50,7 @@ const MyPage = () => {
   };
 
   if (!profile) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
 
   return (
