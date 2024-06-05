@@ -4,10 +4,8 @@ import styled from 'styled-components';
 import supabase from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const naviagate = useNavigate();
+const Login = ({ isModalOpen, setIsModalOpen, setIsLoggedIn }) => {
+  const navigate = useNavigate();
   const idRef = useRef();
   const pwRef = useRef();
 
@@ -25,25 +23,8 @@ const Login = () => {
       alert('로그인이 완료되었습니다');
       setIsLoggedIn(true);
       setIsModalOpen(false);
-      // naviagate('/');
+      // navigate('/');
     }
-  }
-
-  const signOutUser = async (e) => {
-    e.preventDefault();
-    const { data, error } = await supabase.auth.signOut();
-    console.log("signout: ", { data, error });
-
-    if (!error) {
-      setIsLoggedIn(false);
-      alert('로그아웃이 완료되었습니다');
-    } else {
-      console.log(error);
-    }
-  };
-
-  const openModal = () => {
-    setIsModalOpen(true);
   };
 
   const closeModal = () => {
@@ -51,13 +32,11 @@ const Login = () => {
   };
 
   const gotoJoin = () => {
-    naviagate('/join');
-  }
+    navigate('/join');
+  };
 
   return (
     <div>
-      <Button onClick={isLoggedIn ? signOutUser : openModal}>
-        {isLoggedIn ? '로그아웃' : '로그인'} </Button>
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <LoginWrapper>
           <Circle />
