@@ -57,7 +57,6 @@ const MainFeed = ({ userInput }) => {
         {filteredPosts.map((post, index) => (
           <ListItem key={index}>
             <UserInfo>
-              <UserImg src="/src/assets/User.jpg" alt="User" />
               <UserName>{post.user_name}</UserName>
               <TimeBox>{formatDate(post.created_at)}</TimeBox>
             </UserInfo>
@@ -65,7 +64,7 @@ const MainFeed = ({ userInput }) => {
               <Posts>{post.text_content}</Posts>
               <IconListBox>
                 <ButtonWrap>
-                  <Button onClick={() => handleCommentClick(post)}>
+                  <Button>
                     <CommentIcon sx={iconStyle} />
                   </Button>
                   <LikeBtn postId={post.id} />
@@ -76,12 +75,8 @@ const MainFeed = ({ userInput }) => {
           </ListItem>
         ))}
       </List>
-      <CommentModal isOpen={isModalOpen} onClose={handleCloseModal}>
-        {selectedPost && (
-          <div>
-            <p>{selectedPost.text_content}</p>
-          </div>
-        )}
+      <CommentModal isOpen={isModalOpen} onClose={handleCloseModal} user_name={selectedPost?.user_name} text_content={selectedPost?.text_content}>
+        {selectedPost}
       </CommentModal>
     </>
   );
@@ -148,14 +143,6 @@ const UserInfo = styled.div`
   align-items: center;
   text-align: center;
   margin-bottom: ${props => props.$marginBottom || "20px"};
-`;
-
-const UserImg = styled.img`
-  border-radius: 100%;
-  background: #f8cacc;
-  width: ${props => props.$width || "50px"};
-  height: ${props => props.$height || "50px"};
-  margin-right: ${props => props.$marginRight || "15px"};
 `;
 
 const UserName = styled.span`

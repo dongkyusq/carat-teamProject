@@ -3,7 +3,6 @@ import styled from "styled-components";
 import DropdownPack from "./DropdownPack";
 import Login from "./Login";
 import { useEffect, useState } from "react";
-import { getId } from "../API/authkeep";
 import supabase from "../supabaseClient";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsLoggedIn } from "../redux/slices/isLoggedInSlice";
@@ -23,13 +22,20 @@ const LeftBox = () => {
       data: { user },
     } = await supabase.auth.getUser();
     if (!user) {
-      alert("로그인한 유저만 게시물을 작성할 수 있습니다.");
+      alert("로그인 후에 게시물을 작성할 수 있습니다.");
       return;
     }
     navigate("/post", { state: "new" }); // 새글 등록창으로 이동
   };
 
-  const goMyPage = () => {
+  const goMyPage = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      alert("로그인 후에 이용할 수 있는 기능입니다.");
+      return;
+    }
     navigate("/mypage");
   };
 
@@ -122,7 +128,6 @@ const Logo = styled.div`
   width: 90px;
   height: 90px;
   margin: -20px 0 0 -30px;
-  cursor: pointer;
 `;
 
 const PostButton = styled.button`

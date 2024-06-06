@@ -1,8 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import CloseIcon from "@mui/icons-material/Close";
+import { useDispatch, useSelector } from "react-redux";
+import supabase from "../supabaseClient";
+import { setIsLoggedIn } from "../redux/slices/isLoggedInSlice";
 
-const CommentModal = ({ isOpen, onClose, children }) => {
+const CommentModal = ({ isOpen, onClose, user_name, text_content }) => {
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector(state => state.isLoggedIn);
+  const [userDatas, setUserDatas] = useState(null);
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        const { data: userData, error } = await supabase.from("user_data").select("nickname, profile").eq("id", user.id);
+        setUserDatas(userData);
+        if (userData && !error) {
+          dispatch(setIsLoggedIn({ isLoggedIn: true, user: userData }));
+        } else {
+          console.error("Failed to fetch user data", error);
+        }
+      } else {
+        dispatch(setIsLoggedIn({ isLoggedIn: false, user: null }));
+      }
+    };
+
+    if (isOpen) {
+      checkLoginStatus();
+    }
+  }, [isOpen, dispatch]);
+
   if (!isOpen) return null;
 
   return (
@@ -10,15 +40,15 @@ const CommentModal = ({ isOpen, onClose, children }) => {
       <ModalContainer onClick={e => e.stopPropagation()}>
         <UserBox>
           <ProfileImg src="public\img\profileLogo.png" />
-          <span>닉네임</span>
+          <NameBox>{user_name}</NameBox>
         </UserBox>
-        <ModalPost>{children}</ModalPost>
+        <ModalPost>{text_content}</ModalPost>
         <CommentBox>
           <UserBox>
-            <ProfileImg src="public\img\profileLogo.png" />
-            <span>댓글작성자 닉네임</span>
+            <ProfileImg src={isLoggedIn && userDatas && userDatas[0]?.profile ? userDatas[0].profile : "public/img/profileLogo.png"} />
+            <NameBox>{isLoggedIn && userDatas && userDatas[0]?.nickname ? userDatas[0].nickname : "비회원"}</NameBox>
           </UserBox>
-          <CommentInput placeholder="{닉네임}님에게 답글 남기기..." />
+          <CommentInput Placeholder="{닉네임}님에게 답글 남기기..." />
           <AddCommentBtn>답글</AddCommentBtn>
         </CommentBox>
         <CloseButton onClick={onClose}>
@@ -28,6 +58,10 @@ const CommentModal = ({ isOpen, onClose, children }) => {
     </ModalBox>
   );
 };
+
+const NameBox = styled.span`
+  margin-left: 8px;
+`;
 
 const AddCommentBtn = styled.button`
   border: 0;
