@@ -69,7 +69,6 @@ function NewsfeedCreate() {
     const [userNickname, userMbti, user] = await getUserNickname();
 
     if (postImgFile) {
-      // 사용자가 이미지 선택 했을 때
       uploadFile(postImgFile).then(img_content => {
         createPost({
           img_content,
@@ -84,7 +83,6 @@ function NewsfeedCreate() {
         });
       });
     }
-    // 이미지 선택 안했을 때
     createPost({
       text_content: postContent,
       user_name: userNickname,
@@ -94,7 +92,6 @@ function NewsfeedCreate() {
       dispatch(addPost(newPost));
       resetImg();
       resetText();
-      navigate("../");
     });
 
     navigate("../");
@@ -102,7 +99,7 @@ function NewsfeedCreate() {
 
   const cancelImgFile = imgObj => {
     event.preventDefault();
-    URL.revokeObjectURL(imgObj.current); // 문제 : 삭제 후 같은 이미지를 다시 올리는 작업이 불가하다
+    URL.revokeObjectURL(imgObj.current);
     resetImg();
   };
 
