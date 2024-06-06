@@ -14,6 +14,13 @@ const postSlice = createSlice({
       const newPosts = action.payload;
       return [...newPosts];
     },
+    updatePostLikes: (state, action) => {
+      const { postId, increment } = action.payload;
+      const postToUpdate = state.find(post => post.id === postId);
+      if (postToUpdate) {
+        postToUpdate.likes += increment;
+      }
+    },
   },
 });
 

@@ -1,16 +1,19 @@
 import styled from "styled-components";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import CommentIcon from "@mui/icons-material/Comment";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPosts } from "../redux/slices/postSortSlice";
-import supabase from "../supabaseClient";
 import UserBtns from "./UserBtns";
+import CommentModal from "./CommentModal";
 
 const MainFeed = ({ userInput }) => {
   const dispatch = useDispatch();
   const posts = useSelector(state => state.posts.posts);
   const filter = useSelector(state => state.posts.filter) || "게시물정렬";
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
 
   useEffect(() => {
     dispatch(fetchPosts(filter));
@@ -24,6 +27,16 @@ const MainFeed = ({ userInput }) => {
     const options = { hour: "2-digit", minute: "2-digit" };
     const formattedTime = date.toLocaleTimeString("ko-KR", options);
     return `${year}년${month}월${day}일 / ${formattedTime}`;
+  };
+
+  const handleCommentClick = post => {
+    setSelectedPost(post);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedPost(null);
   };
 
   const filteredPosts = posts
