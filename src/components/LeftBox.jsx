@@ -5,13 +5,21 @@ import Login from "./Login";
 import { useEffect, useState } from "react";
 import { getId } from "../API/authkeep";
 import supabase from "../supabaseClient";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsLoggedIn } from "../redux/slices/isLoggedInSlice";
 
 const LeftBox = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 추가
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태 추가
   const [userName, setUserName] = useState(""); // 로그인한 유저이름 상태 추가
   const [userImg, setUserImg] = useState(""); // 로그인한 유저프로필 상태 추가
+
+  const isLoggedIn = useSelector(state => {
+    console.log(state);
+    return state.isLoggedIn;
+  });
+
+  const dispatch = useDispatch();
 
   const goPostPage = async () => {
     const {
@@ -28,17 +36,12 @@ const LeftBox = () => {
     navigate("/mypage");
   };
 
-  const navigateToMyPage = () => {
-    // mypage로 이동
-    navigate("/mypage");
-  };
-
   const signOutUser = async () => {
     const { data, error } = await supabase.auth.signOut();
     console.log("signout: ", { data, error });
 
     if (!error) {
-      setIsLoggedIn(false);
+      dispatch(setIsLoggedIn(false));
       alert("로그아웃이 완료되었습니다");
     } else {
       console.log(error);
@@ -72,7 +75,7 @@ const LeftBox = () => {
       data: { user },
     } = await supabase.auth.getUser();
     if (user) {
-      setIsLoggedIn(true);
+      dispatch(setIsLoggedIn(true));
       const { data: userData, error } = await supabase.from("user_data").select("nickname, profile").eq("id", user.id).single();
       if (userData && !error) {
         setUserName(userData.nickname);
@@ -83,15 +86,13 @@ const LeftBox = () => {
     } else {
       setUserName("");
       setUserImg("public/img/profileLogo.png");
-      setIsLoggedIn(false); // 로그아웃 상태로 변경
+      dispatch(setIsLoggedIn(false)); // 로그아웃 상태로 변경
     }
   };
 
   useEffect(() => {
     checkLoginStatus();
   }, [isLoggedIn]);
-
-  console.log(isLoggedIn);
 
   return (
     <Box>
@@ -109,7 +110,7 @@ const LeftBox = () => {
         </UserBox>
         <PostButton onClick={goPostPage}>새글 등록하기</PostButton>
       </BoxInner>
-      <Login isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} setIsLoggedIn={setIsLoggedIn} /> {/* Login 컴포넌트에 props 전달 */}
+      <Login isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} /> {/* Login 컴포넌트에 props 전달 */}
     </Box>
   );
 };

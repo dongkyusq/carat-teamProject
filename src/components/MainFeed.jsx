@@ -4,6 +4,8 @@ import CommentIcon from "@mui/icons-material/Comment";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPosts } from "../redux/slices/postSortSlice";
+import supabase from "../supabaseClient";
+import UserBtns from "./UserBtns";
 
 const MainFeed = ({ userInput }) => {
   const dispatch = useDispatch();
@@ -47,19 +49,32 @@ const MainFeed = ({ userInput }) => {
           <FeedContent>
             <Posts>{post.text_content}</Posts>
             <IconListBox>
-              <Button>
-                <CommentIcon sx={{ fontSize: "30px", color: "white", "&:hover": { color: "#f8cacc" } }} />
-              </Button>
-              <Button>
-                <FavoriteBorderIcon sx={{ fontSize: "30px", color: "white", "&:hover": { color: "#f8cacc" } }} />
-                <LikesCount>{post.likes}</LikesCount>
-              </Button>
+              <ButtonWrap>
+                <Button>
+                  <CommentIcon sx={iconStyle} />
+                </Button>
+                <Button>
+                  <FavoriteBorderIcon sx={iconStyle} />
+                  <LikesCount>{post.likes}</LikesCount>
+                </Button>
+              </ButtonWrap>
+              <UserBtns post={post} />
             </IconListBox>
           </FeedContent>
         </ListItem>
       ))}
     </List>
   );
+};
+
+const ButtonWrap = styled.div`
+  display: flex;
+`;
+
+const iconStyle = {
+  fontSize: "30px",
+  color: "white",
+  "&:hover": { color: "#f8cacc" },
 };
 
 const LikesCount = styled.p`
@@ -83,8 +98,8 @@ const Button = styled.button`
 
 const IconListBox = styled.div`
   display: flex;
-  margin: 0 0 5px 15px;
-  gap: 10px;
+  justify-content: space-between;
+  padding: 10px;
 `;
 
 const List = styled.ul`

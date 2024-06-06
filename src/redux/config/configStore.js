@@ -1,8 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import postsReducer from "../slices/postSortSlice";
+import postsSortSlice from "../slices/postSortSlice";
+import isLoggedInSlice from "../slices/isLoggedInSlice";
 
 export const store = configureStore({
-  reducer: { posts: postsReducer },
+  reducer: {
+    posts: postsSortSlice,
+    isLoggedIn: isLoggedInSlice,
+  },
 });
 
 export default store;
