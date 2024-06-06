@@ -10,13 +10,16 @@ export default function LikeBtn({ postId }) {
   const [currentLikes, setCurrentLikes] = useState(0);
 
   const fetchPostLikes = async () => {
-    const { data: post, error: postError } = await supabase.from("posts").select("likes").eq("id", postId);
+    const { data: post, error: postError } = await supabase.from("posts").select("likes").eq("id", postId).single();
+
     if (postError) {
       console.error("Post error:", postError);
       return;
     }
-    if (post.length > 0) {
-      setCurrentLikes(post[0].likes);
+
+    if (post) {
+      console.log("Fetched post likes:", post.likes);
+      setCurrentLikes(post.likes);
     }
   };
 
@@ -25,6 +28,7 @@ export default function LikeBtn({ postId }) {
       setLiked(false);
       return;
     }
+
     const { data: likes, error: likesError } = await supabase.from("likes").select("likes_user_id").eq("likes_post", postId).eq("likes_user_id", userId);
 
     if (likesError) {
@@ -33,13 +37,14 @@ export default function LikeBtn({ postId }) {
     }
 
     const isLiked = likes.length > 0;
+    console.log("Fetched user likes:", isLiked);
     setLiked(isLiked);
   };
 
   useEffect(() => {
     const fetchData = async () => {
       const { data: userResponse, error: userError } = await supabase.auth.getUser();
-      console.log("User response:", userResponse); // 사용자 정보 콘솔에 출력
+
       if (userError) {
         console.error("User error:", userError);
         return;
@@ -67,16 +72,6 @@ export default function LikeBtn({ postId }) {
       return;
     }
 
-    const { data: post, error: postError } = await supabase.from("posts").select("*").eq("id", postId);
-    if (postError) {
-      console.error("Post error:", postError);
-      return;
-    }
-    if (post.length === 0) {
-      console.error("No post found with the given postId:", postId);
-      return;
-    }
-
     let updatedLikes = currentLikes;
 
     if (liked) {
@@ -99,12 +94,16 @@ export default function LikeBtn({ postId }) {
       updatedLikes += 1;
     }
 
+    console.log("Updated likes before saving:", updatedLikes);
+
     const { error: updateError } = await supabase.from("posts").update({ likes: updatedLikes }).eq("id", postId);
 
     if (updateError) {
       console.error("Post update error:", updateError);
       return;
     }
+
+    console.log("Post likes updated in database");
 
     setCurrentLikes(updatedLikes);
     setLiked(!liked);
