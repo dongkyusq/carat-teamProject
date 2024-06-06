@@ -1,12 +1,13 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Modal from "../pages/Modal";
 import styled from "styled-components";
 import supabase from "../supabaseClient";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import CloseIcon from "@mui/icons-material/Close";
 import { setIsLoggedIn } from "../redux/slices/isLoggedInSlice";
 
-const Login = ({ isModalOpen, setIsModalOpen }) => {
+const Login = ({ isModalOpen, setIsModalOpen, setIsLoggedIn }) => {
   const navigate = useNavigate();
   const idRef = useRef();
   const pwRef = useRef();
@@ -41,8 +42,11 @@ const Login = ({ isModalOpen, setIsModalOpen }) => {
 
   return (
     <div>
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
+      <Modal isOpen={isModalOpen}>
         <LoginWrapper>
+          <CloseIconWrapper onClick={closeModal}>
+            <CloseIcon />
+          </CloseIconWrapper>
           <Circle />
           <Form>
             <LoginInput>
@@ -145,8 +149,20 @@ const SignUp = styled.div`
   color: #ff6f61;
   font-size: 15px;
   cursor: pointer;
+  d &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const CloseIconWrapper = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  font-size: 20px;
 
   &:hover {
-    text-decoration: underline;
+    transform: scale(1.2) translateY(-2px);
   }
 `;
