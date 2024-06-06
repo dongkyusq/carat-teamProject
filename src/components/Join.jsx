@@ -31,7 +31,7 @@ const Join = () => {
     const user = data.user;
     if (user) {
       const defaultProfile = 'https://jwyfdpnxmxjqwmmqfjsf.supabase.co/storage/v1/object/public/profile/public/default-profile.jpg';
-      const defaultBackground = 'https://jwyfdpnxmxjqwmmqfjsf.supabase.co/storage/v1/object/public/profile/public/default-bg.png';
+      const defaultBackground = 'https://jwyfdpnxmxjqwmmqfjsf.supabase.co/storage/v1/object/public/bg/public/default-bg.png';
       const { error: insertError } = await supabase.from("user_data").insert([
         {
           name: nameRef.current.value,
