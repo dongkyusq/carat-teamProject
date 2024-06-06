@@ -1,16 +1,19 @@
 import styled from "styled-components";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import CommentIcon from "@mui/icons-material/Comment";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPosts } from "../redux/slices/postSortSlice";
-import supabase from "../supabaseClient";
 import UserBtns from "./UserBtns";
+import CommentModal from "./CommentModal";
 
 const MainFeed = ({ userInput }) => {
   const dispatch = useDispatch();
   const posts = useSelector(state => state.posts.posts);
   const filter = useSelector(state => state.posts.filter) || "게시물정렬";
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
 
   useEffect(() => {
     dispatch(fetchPosts(filter));
@@ -26,6 +29,16 @@ const MainFeed = ({ userInput }) => {
     return `${year}년${month}월${day}일 / ${formattedTime}`;
   };
 
+  const handleCommentClick = post => {
+    setSelectedPost(post);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedPost(null);
+  };
+
   const filteredPosts = posts
     .filter(post => post.text_content.toLowerCase().includes(userInput.toLowerCase()))
     .sort((a, b) => {
@@ -38,32 +51,41 @@ const MainFeed = ({ userInput }) => {
     });
 
   return (
-    <List>
-      {filteredPosts.map((post, index) => (
-        <ListItem key={index}>
-          <UserInfo>
-            <UserImg src="/src/assets/User.jpg" alt="User" />
-            <UserName>{post.user_name}</UserName>
-            <TimeBox>{formatDate(post.created_at)}</TimeBox>
-          </UserInfo>
-          <FeedContent>
-            <Posts>{post.text_content}</Posts>
-            <IconListBox>
-              <ButtonWrap>
-                <Button>
-                  <CommentIcon sx={iconStyle} />
-                </Button>
-                <Button>
-                  <FavoriteBorderIcon sx={iconStyle} />
-                  <LikesCount>{post.likes}</LikesCount>
-                </Button>
-              </ButtonWrap>
-              <UserBtns post={post} />
-            </IconListBox>
-          </FeedContent>
-        </ListItem>
-      ))}
-    </List>
+    <>
+      <List>
+        {filteredPosts.map((post, index) => (
+          <ListItem key={index}>
+            <UserInfo>
+              <UserImg src="/src/assets/User.jpg" alt="User" />
+              <UserName>{post.user_name}</UserName>
+              <TimeBox>{formatDate(post.created_at)}</TimeBox>
+            </UserInfo>
+            <FeedContent>
+              <Posts>{post.text_content}</Posts>
+              <IconListBox>
+                <ButtonWrap>
+                  <Button onClick={() => handleCommentClick(post)}>
+                    <CommentIcon sx={iconStyle} />
+                  </Button>
+                  <Button>
+                    <FavoriteBorderIcon sx={iconStyle} />
+                    <LikesCount>{post.likes}</LikesCount>
+                  </Button>
+                </ButtonWrap>
+                <UserBtns post={post} />
+              </IconListBox>
+            </FeedContent>
+          </ListItem>
+        ))}
+      </List>
+      <CommentModal isOpen={isModalOpen} onClose={handleCloseModal}>
+        {selectedPost && (
+          <div>
+            <p>{selectedPost.text_content}</p>
+          </div>
+        )}
+      </CommentModal>
+    </>
   );
 };
 
