@@ -78,12 +78,8 @@ const MainFeed = ({ userInput }) => {
           </ListItem>
         ))}
       </List>
-      <CommentModal isOpen={isModalOpen} onClose={handleCloseModal}>
-        {selectedPost && (
-          <div>
-            <p>{selectedPost.text_content}</p>
-          </div>
-        )}
+      <CommentModal isOpen={isModalOpen} onClose={handleCloseModal} user_name={selectedPost?.user_name} text_content={selectedPost?.text_content}>
+        {selectedPost}
       </CommentModal>
     </>
   );
