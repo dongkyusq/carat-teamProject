@@ -16,6 +16,21 @@ const MainFeed = ({ userInput }) => {
     dispatch(fetchPosts(filter));
   }, [dispatch, filter]);
 
+  const buttonClick = async () => {
+    try {
+      const { data, error } = await supabase.from("likes").insert([{ likes_post: postId, likes_user_id: "your_user_id", created_at: new Date() }]);
+
+      if (error) {
+        console.error("Error inserting like:", error);
+      } else {
+        console.log("Like inserted successfully:", data);
+        dispatch(fetchPosts(filter));
+      }
+    } catch (error) {
+      console.error("Error inserting like:", error.message);
+    }
+  };
+
   const formatDate = dateString => {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -53,7 +68,7 @@ const MainFeed = ({ userInput }) => {
                 <Button>
                   <CommentIcon sx={iconStyle} />
                 </Button>
-                <Button>
+                <Button onClick={() => buttonClick(post.id)}>
                   <FavoriteBorderIcon sx={iconStyle} />
                   <LikesCount>{post.likes}</LikesCount>
                 </Button>
