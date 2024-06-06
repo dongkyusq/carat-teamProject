@@ -10,16 +10,13 @@ import { setIsLoggedIn } from "../redux/slices/isLoggedInSlice";
 
 const LeftBox = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 추가
   const [userName, setUserName] = useState(""); // 로그인한 유저이름 상태 추가
   const [userImg, setUserImg] = useState(""); // 로그인한 유저프로필 상태 추가
 
-  const isLoggedIn = useSelector(state => {
-    console.log(state);
-    return state.isLoggedIn;
-  });
-
-  const dispatch = useDispatch();
+  const isLoggedIn = useSelector(state => state.isLoggedIn);
 
   const goPostPage = async () => {
     const {
@@ -29,7 +26,7 @@ const LeftBox = () => {
       alert("로그인한 유저만 게시물을 작성할 수 있습니다.");
       return;
     }
-    navigate("/post"); // 새글 등록창으로 이동
+    navigate("/post", { state: "new" }); // 새글 등록창으로 이동
   };
 
   const goMyPage = () => {
