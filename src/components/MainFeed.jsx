@@ -1,11 +1,12 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import CommentIcon from "@mui/icons-material/Comment";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPosts } from "../redux/slices/postSortSlice";
 import UserBtns from "./UserBtns";
 import CommentModal from "./CommentModal";
+import LikeBtn from "./LikesCount";
+import supabase from "../supabaseClient";
 
 const MainFeed = ({ userInput }) => {
   const dispatch = useDispatch();
@@ -56,7 +57,6 @@ const MainFeed = ({ userInput }) => {
         {filteredPosts.map((post, index) => (
           <ListItem key={index}>
             <UserInfo>
-              <UserImg src="/src/assets/User.jpg" alt="User" />
               <UserName>{post.user_name}</UserName>
               <TimeBox>{formatDate(post.created_at)}</TimeBox>
             </UserInfo>
@@ -67,10 +67,7 @@ const MainFeed = ({ userInput }) => {
                   <Button onClick={() => handleCommentClick(post)}>
                     <CommentIcon sx={iconStyle} />
                   </Button>
-                  <Button>
-                    <FavoriteBorderIcon sx={iconStyle} />
-                    <LikesCount>{post.likes}</LikesCount>
-                  </Button>
+                  <LikeBtn postId={post.id} />
                 </ButtonWrap>
                 <UserBtns post={post} />
               </IconListBox>
