@@ -9,31 +9,38 @@ const UserPosts = ({ userId }) => {
   const userPosts = posts.filter(post => post.user_id === userId);
 
   return (
-    <PostList>
-      {userPosts.map((post, index) => (
-        <ListItem key={index}>
-          <UserInfo>
-            <UserImg src="/src/assets/User.jpg" alt="User" />
-            <UserName>{post.user_name}</UserName>
-            <TimeBox>{new Date(post.created_at).toLocaleString()}</TimeBox>
-          </UserInfo>
-          <FeedContent>
-            <Posts>{post.text_content}</Posts>
-            <IconListBox>
-              <Button>
-                <CommentIcon sx={{ fontSize: "30px", color: "white", "&:hover": { color: "#f8cacc" } }} />
-              </Button>
-              <Button>
-                <FavoriteBorderIcon sx={{ fontSize: "30px", color: "white", "&:hover": { color: "#f8cacc" } }} />
-                <LikesCount>{post.likes}</LikesCount>
-              </Button>
-            </IconListBox>
-          </FeedContent>
-        </ListItem>
-      ))}
-    </PostList>
+    <PostContainer>
+      <Title>작성한 글</Title>
+      <PostList>
+        {userPosts.map((post, index) => (
+          <ListItem key={index}>
+            <UserInfo>
+              <UserImg src="/src/assets/User.jpg" alt="User" />
+              <UserName>{post.user_name}</UserName>
+              <TimeBox>{new Date(post.created_at).toLocaleString()}</TimeBox>
+            </UserInfo>
+            <FeedContent>
+              <Posts>{post.text_content}</Posts>
+              <IconListBox>
+                <Button>
+                  <CommentIcon sx={{ fontSize: "30px", color: "white", "&:hover": { color: "#f8cacc" } }} />
+                </Button>
+                <Button>
+                  <FavoriteBorderIcon sx={{ fontSize: "30px", color: "white", "&:hover": { color: "#f8cacc" } }} />
+                  <LikesCount>{post.likes}</LikesCount>
+                </Button>
+              </IconListBox>
+            </FeedContent>
+          </ListItem>
+        ))}
+      </PostList>
+    </PostContainer>
   );
 };
+
+const PostContainer = styled.div`
+  width: 100%;
+`;
 
 const PostList = styled.ul`
   display: flex;
@@ -47,6 +54,12 @@ const PostList = styled.ul`
   &::-webkit-scrollbar {
     display: none;
   }
+`;
+
+const Title = styled.h2`
+  font-size: 24px;
+  color: #ffffff;
+  margin-bottom: 20px;
 `;
 
 const ListItem = styled.li`
