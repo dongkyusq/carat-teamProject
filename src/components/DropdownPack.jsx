@@ -5,9 +5,11 @@ import TuneIcon from "@mui/icons-material/Tune";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPosts, setFilter } from "../redux/slices/postSortSlice";
+
 const DropdownPack = () => {
   const dispatch = useDispatch();
   const filter = useSelector(state => state.posts.filter);
+
   useEffect(() => {
     dispatch(fetchPosts(filter));
   }, [dispatch, filter]);
@@ -17,7 +19,10 @@ const DropdownPack = () => {
   return (
     <NavbarContainer>
       <NavBarP>{filter ? ` ${filter}` : "게시물 정렬"}</NavBarP>
-      <NavItem icon={<TuneIcon sx={{ color: "#141233", fontSize: "25px", marginLeft: "110px", marginTop: "-2px", "&:hover": { color: "#F8CACC" } }} />} onMenuSelect={handleMenuSelect}>
+      <NavItem
+        icon={<TuneIcon sx={{ color: "#141233", fontSize: "25px", marginLeft: "5px", position: "absolute", marginTop: "-13px", "&:hover": { color: "#F8CACC" } }} />}
+        onMenuSelect={handleMenuSelect}
+      >
         <DropdownMenu onMenuSelect={handleMenuSelect} />
       </NavItem>
     </NavbarContainer>
@@ -38,19 +43,22 @@ function NavItem(props) {
       setOpen(false);
     }
   };
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
   const handleMenuSelect = menu => {
     props.onMenuSelect(menu);
     setOpen(false);
   };
+
   return (
     <NavChildren ref={ref}>
-      <NavIconBtn onClick={() => setOpen(!open)}>{props.icon}</NavIconBtn>
+      <a onClick={() => setOpen(!open)}>{props.icon}</a>
       {open && React.cloneElement(props.children, { onMenuSelect: handleMenuSelect })}
     </NavChildren>
   );
@@ -116,6 +124,7 @@ const MenuItem = styled.a`
   padding: 0 10px;
   text-decoration: none;
   color: black;
+
   &:hover {
     background-color: #ffd0d0;
     color: white;
@@ -123,41 +132,29 @@ const MenuItem = styled.a`
 `;
 const Dropdown = styled.div`
   position: absolute;
-  top: 50px;
-  left: -140px;
-  width: 220px;
-  border-radius: 10px;
+  top: 0;
+  left: 0;
+  width: 92%;
+  border-radius: 20px;
   overflow: hidden;
   background-color: white;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
   font-size: 20px;
   padding: 10px;
 `;
-const NavIconBtn = styled.a`
-  width: 30px;
-  height: 30px;
-  padding: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  background-color: transparent;
-  transition: filter 300ms;
-`;
+
 const NavChildren = styled.li`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 80px;
-  position: absolute;
 `;
 const Navbar = styled.nav`
   background-color: transparent;
   margin-bottom: 280px;
+  position: relative;
   cursor: pointer;
 `;
 const NavbarItem = styled.ul`
-  max-width: 100%;
   height: 50px;
   display: flex;
   justify-content: center;

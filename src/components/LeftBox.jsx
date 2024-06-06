@@ -4,13 +4,14 @@ import DropdownPack from "./DropdownPack";
 import Login from "./Login";
 import { useEffect, useState } from "react";
 import { getId } from "../API/authkeep";
-
 import supabase from "../supabaseClient";
 
 const LeftBox = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 추가
   const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태 추가
+  const [userName, setUserName] = useState(""); // 로그인한 유저이름 상태 추가
+  const [userImg, setUserImg] = useState(""); // 로그인한 유저프로필 상태 추가
 
   const goPostPage = async () => {
     const {
@@ -52,19 +53,43 @@ const LeftBox = () => {
     }
   };
 
-  //로그인 유지
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      const userId = await getId();
-      if (userId) {
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
-      }
-    };
+  // 로그인 유지
+  // useEffect(() => {
+  //   const checkLoginStatus = async () => {
+  //     const userId = await getId();
+  //     if (userId) {
+  //       setIsLoggedIn(true);
+  //     } else {
+  //       setIsLoggedIn(false);
+  //     }
+  //   };
 
+  //   checkLoginStatus();
+  // }, []);
+
+  const checkLoginStatus = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (user) {
+      setIsLoggedIn(true);
+      const { data: userData, error } = await supabase.from("user_data").select("nickname, profile").eq("id", user.id).single();
+      if (userData && !error) {
+        setUserName(userData.nickname);
+        setUserImg(userData.profile || "/public/img/profileLogo.png");
+      } else {
+        console.error("Failed to fetch user data", error);
+      }
+    } else {
+      setUserName("");
+      setUserImg("public/img/profileLogo.png");
+      setIsLoggedIn(false); // 로그아웃 상태로 변경
+    }
+  };
+
+  useEffect(() => {
     checkLoginStatus();
-  }, []);
+  }, [isLoggedIn]);
 
   console.log(isLoggedIn);
 
@@ -76,12 +101,12 @@ const LeftBox = () => {
         </Logo>
         <UserBox>
           <UserInfo>
-            <UserImg src="public\img\profileLogo.png" alt="Login" onClick={navigateToMyPage} />
-            <UserName>{isLoggedIn ? "환영합니다!" : "반갑습니다!"}</UserName>
+            <UserImg src={userImg} alt="Login" />
+            <UserName>{isLoggedIn ? userName : "로그인이 필요합니다."}</UserName>
           </UserInfo>
           <LoginBtn onClick={handlebtnClick}>{isLoggedIn ? "로그아웃" : "로그인"}</LoginBtn>
+          <DropdownPack />
         </UserBox>
-        <DropdownPack />
         <PostButton onClick={goPostPage}>새글 등록하기</PostButton>
       </BoxInner>
       <Login isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} setIsLoggedIn={setIsLoggedIn} /> {/* Login 컴포넌트에 props 전달 */}
@@ -112,7 +137,7 @@ const Logo = styled.div`
   flex-shrink: 0;
   width: 90px;
   height: 90px;
-  margin: -20px 0 30px -30px;
+  margin: -20px 0 0 -30px;
   cursor: pointer;
 `;
 
@@ -171,6 +196,7 @@ const LoginBtn = styled.button`
   color: #141233;
   font-weight: bold;
   font-size: 20px;
+  margin-bottom: 10px;
   cursor: pointer;
 
   &:hover {
@@ -180,6 +206,5 @@ const LoginBtn = styled.button`
 `;
 
 const UserBox = styled.div`
-  margin-top: -50px;
-  margin-bottom: -140px;
+  margin-top: 0;
 `;
