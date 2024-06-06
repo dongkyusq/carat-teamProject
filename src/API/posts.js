@@ -10,3 +10,15 @@ export const createPost = async ({ text_content, img_content = null, user_name, 
   }
   return posts;
 };
+
+export const updatePost = async ({ text_content, img_content = null, postId }) => {
+  const { data: updatedPost, error } = await supabase.from("posts").update({ text_content, img_content }).eq("id", postId).select("*");
+
+  console.log("post in updatePost :", updatedPost);
+
+  if (error) {
+    console.log(error);
+    return;
+  }
+  return updatedPost;
+};

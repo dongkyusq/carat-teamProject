@@ -110,6 +110,7 @@ const Posts = styled.div`
   background: #ffd0d0;
   border-radius: 15px;
   color: #000;
+  white-space: pre-line;
   word-wrap: break-word;
   word-break: keep-all;
 `;
