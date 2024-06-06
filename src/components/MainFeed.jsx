@@ -4,13 +4,7 @@ import CommentIcon from "@mui/icons-material/Comment";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPosts } from "../redux/slices/postSortSlice";
-<<<<<<< HEAD
-import LikeButton from "./LikesCount";
-import LikeBtn from "./LikesCount";
-=======
-import supabase from "../supabaseClient";
 import UserBtns from "./UserBtns";
->>>>>>> eec7049e569b39719be1c68a35207c9a4506d149
 
 const MainFeed = ({ userInput }) => {
   const dispatch = useDispatch();
@@ -54,16 +48,6 @@ const MainFeed = ({ userInput }) => {
           <FeedContent>
             <Posts>{post.text_content}</Posts>
             <IconListBox>
-<<<<<<< HEAD
-              <Button>
-                <CommentIcon sx={{ fontSize: "30px", color: "white", "&:hover": { color: "#f8cacc" } }} />
-              </Button>
-              <Button>
-                <FavoriteBorderIcon sx={{ fontSize: "30px", color: "white", "&:hover": { color: "#f8cacc" } }} />
-                <LikesCount>{post.likes}</LikesCount>
-              </Button>
-              <LikeBtn />
-=======
               <ButtonWrap>
                 <Button>
                   <CommentIcon sx={iconStyle} />
@@ -74,7 +58,6 @@ const MainFeed = ({ userInput }) => {
                 </Button>
               </ButtonWrap>
               <UserBtns post={post} />
->>>>>>> eec7049e569b39719be1c68a35207c9a4506d149
             </IconListBox>
           </FeedContent>
         </ListItem>
