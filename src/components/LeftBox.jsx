@@ -5,13 +5,21 @@ import Login from "./Login";
 import { useEffect, useState } from "react";
 import { getId } from "../API/authkeep";
 import supabase from "../supabaseClient";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsLoggedIn } from "../redux/slices/isLoggedInSlice";
 
 const LeftBox = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 추가
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태 추가
   const [userName, setUserName] = useState(""); // 로그인한 유저이름 상태 추가
   const [userImg, setUserImg] = useState(""); // 로그인한 유저프로필 상태 추가
+
+  const isLoggedIn = useSelector(state => {
+    console.log(state);
+    return state.isLoggedIn;
+  });
+
+  const dispatch = useDispatch();
 
   const goPostPage = async () => {
     const {
@@ -24,8 +32,8 @@ const LeftBox = () => {
     navigate("/post"); // 새글 등록창으로 이동
   };
 
-  const navigateToHome = () => {
-    navigate(-1);
+  const goMyPage = () => {
+    navigate("/mypage");
   };
 
   const signOutUser = async () => {
@@ -33,7 +41,7 @@ const LeftBox = () => {
     console.log("signout: ", { data, error });
 
     if (!error) {
-      setIsLoggedIn(false);
+      dispatch(setIsLoggedIn(false));
       alert("로그아웃이 완료되었습니다");
     } else {
       console.log(error);
@@ -48,26 +56,12 @@ const LeftBox = () => {
     }
   };
 
-  // 로그인 유지
-  // useEffect(() => {
-  //   const checkLoginStatus = async () => {
-  //     const userId = await getId();
-  //     if (userId) {
-  //       setIsLoggedIn(true);
-  //     } else {
-  //       setIsLoggedIn(false);
-  //     }
-  //   };
-
-  //   checkLoginStatus();
-  // }, []);
-
   const checkLoginStatus = async () => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
     if (user) {
-      setIsLoggedIn(true);
+      dispatch(setIsLoggedIn(true));
       const { data: userData, error } = await supabase.from("user_data").select("nickname, profile").eq("id", user.id).single();
       if (userData && !error) {
         setUserName(userData.nickname);
@@ -78,7 +72,7 @@ const LeftBox = () => {
     } else {
       setUserName("");
       setUserImg("public/img/profileLogo.png");
-      setIsLoggedIn(false); // 로그아웃 상태로 변경
+      dispatch(setIsLoggedIn(false)); // 로그아웃 상태로 변경
     }
   };
 
@@ -86,16 +80,14 @@ const LeftBox = () => {
     checkLoginStatus();
   }, [isLoggedIn]);
 
-  console.log(isLoggedIn);
-
   return (
     <Box>
       <BoxInner>
-        <Logo onClick={navigateToHome}>
+        <Logo>
           <LogoImg src="/src/assets/logo.png" alt="News Feed Logo" width="100%" height="100%" />
         </Logo>
         <UserBox>
-          <UserInfo>
+          <UserInfo onClick={goMyPage}>
             <UserImg src={userImg} alt="Login" />
             <UserName>{isLoggedIn ? userName : "로그인이 필요합니다."}</UserName>
           </UserInfo>
@@ -104,7 +96,7 @@ const LeftBox = () => {
         </UserBox>
         <PostButton onClick={goPostPage}>새글 등록하기</PostButton>
       </BoxInner>
-      <Login isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} setIsLoggedIn={setIsLoggedIn} /> {/* Login 컴포넌트에 props 전달 */}
+      <Login isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
     </Box>
   );
 };
@@ -159,6 +151,7 @@ const UserInfo = styled.div`
   flex-flow: row nowrap;
   align-items: center;
   text-align: center;
+  cursor: pointer;
   margin-bottom: ${props => props.$marginBottom || "20px"};
 `;
 
