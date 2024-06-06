@@ -51,31 +51,36 @@ const MainFeed = ({ userInput }) => {
     });
 
   return (
-    <List>
-      {filteredPosts.map((post, index) => (
-        <ListItem key={index}>
-          <UserInfo>
-            <UserName>{post.user_name}</UserName>
-            <TimeBox>{formatDate(post.created_at)}</TimeBox>
-          </UserInfo>
-          <FeedContent>
-            <Posts>{post.text_content}</Posts>
-            <IconListBox>
-              <ButtonWrap>
-                <Button>
-                  <CommentIcon sx={iconStyle} />
-                </Button>
-                <Button>
-                  <FavoriteBorderIcon sx={iconStyle} />
-                  <LikesCount>{post.likes}</LikesCount>
-                </Button>
-              </ButtonWrap>
-              <UserBtns post={post} />
-            </IconListBox>
-          </FeedContent>
-        </ListItem>
-      ))}
-    </List>
+    <>
+      <List>
+        {filteredPosts.map((post, index) => (
+          <ListItem key={index}>
+            <UserInfo>
+              <UserName>{post.user_name}</UserName>
+              <TimeBox>{formatDate(post.created_at)}</TimeBox>
+            </UserInfo>
+            <FeedContent>
+              <Posts>{post.text_content}</Posts>
+              <IconListBox>
+                <ButtonWrap>
+                  <Button onClick={() => handleCommentClick(post)}>
+                    <CommentIcon sx={iconStyle} />
+                  </Button>
+                  <Button>
+                    <FavoriteBorderIcon sx={iconStyle} />
+                    <LikesCount>{post.likes}</LikesCount>
+                  </Button>
+                </ButtonWrap>
+                <UserBtns post={post} />
+              </IconListBox>
+            </FeedContent>
+          </ListItem>
+        ))}
+      </List>
+      <CommentModal isOpen={isModalOpen} onClose={handleCloseModal} user_name={selectedPost?.user_name} text_content={selectedPost?.text_content}>
+        {selectedPost}
+      </CommentModal>
+    </>
   );
 };
 
