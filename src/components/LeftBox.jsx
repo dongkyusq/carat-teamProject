@@ -28,6 +28,11 @@ const LeftBox = () => {
     navigate(-1);
   };
 
+  const navigateToMyPage = () => {
+    // mypage로 이동
+    navigate("/mypage");
+  };
+
   const signOutUser = async () => {
     const { data, error } = await supabase.auth.signOut();
     console.log("signout: ", { data, error });
@@ -167,6 +172,7 @@ const UserImg = styled.img`
   background: #f8cacc;
   width: 50px;
   height: 50px;
+  cursor: pointer;
 `;
 
 const UserName = styled.span`
