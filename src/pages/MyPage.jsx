@@ -16,6 +16,7 @@ const MyPage = () => {
   const [uploadType, setUploadType] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [backgroundUrl, setBackgroundUrl] = useState("");
 
   // 프로필 데이터 조회
   useEffect(() => {
@@ -30,13 +31,26 @@ const MyPage = () => {
         } else {
           setProfile(data);
           dispatch(fetchPosts()); // 게시글 가져오기
+
+          // 백그라운드 이미지 가져오기
+          if (data.background) {
+            // const { data: imageUrl, error: error } = await supabase.from("user_data").select('background');
+            if (error) {
+              console.error("이미지 에러", error);
+            } else {
+              setBackgroundUrl(data.background);
+              console.log("data backgroud", data.background);
+            }
+          } else {
+            console.log("Default background image used.");
+          }
         }
       } else {
         navigate("/"); // 로그인되지 않은 경우 메인 페이지로 이동
       }
     };
     fetchProfile();
-  }, [navigate, dispatch]);
+  }, [navigate, dispatch, uploading]);
 
   // 프로필 저장 핸들러
   const handleSave = async updatedProfile => {
@@ -71,7 +85,7 @@ const MyPage = () => {
           setUploading(true);
         }}
       >
-        <StBackgroundImage src={profile.background || "default-bg.png"} alt="Background" />
+        <StBackgroundImage src={backgroundUrl} alt="Background" />
       </StBackground>
       <StProfileContainer>
         <StProfileWrapper>
@@ -109,8 +123,9 @@ const StMainContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
-  border-left: solid 1px #cc8798;
-  border-right: solid 1px #cc8798;
+  height: 100vh;
+  border-right: solid 1px #f8caca;
+  border-left:  solid 1px #f8caca;
 `;
 
 const StHeader = styled.div`
