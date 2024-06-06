@@ -1,12 +1,11 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import CommentIcon from "@mui/icons-material/Comment";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPosts } from "../redux/slices/postSortSlice";
 import UserBtns from "./UserBtns";
 import CommentModal from "./CommentModal";
-import LikeBtn from "./LikesCount";
+import LikesBtn from "./LikesBtn";
 import supabase from "../supabaseClient";
 
 const MainFeed = ({ userInput }) => {
@@ -69,8 +68,7 @@ const MainFeed = ({ userInput }) => {
                     <CommentIcon sx={iconStyle} />
                   </Button>
                   <Button>
-                    <FavoriteBorderIcon sx={iconStyle} />
-                    <LikesCount>{post.likes}</LikesCount>
+                    <LikesBtn post={post}>{post.likes}</LikesBtn>
                   </Button>
                 </ButtonWrap>
                 <UserBtns post={post} />
