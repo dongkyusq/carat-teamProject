@@ -49,6 +49,7 @@ const CommentModal = ({ isOpen, onClose, user_name, text_content }) => {
             <NameBox>{isLoggedIn && userDatas && userDatas[0]?.nickname ? userDatas[0].nickname : "비회원"}</NameBox>
           </UserBox>
           <CommentInput placeholder={`${user_name}님에게 답글 남기기...`} />
+
           <AddCommentBtn>답글</AddCommentBtn>
         </CommentBox>
         <CloseButton onClick={onClose}>

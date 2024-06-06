@@ -1,11 +1,12 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import CommentIcon from "@mui/icons-material/Comment";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPosts } from "../redux/slices/postSortSlice";
 import UserBtns from "./UserBtns";
 import CommentModal from "./CommentModal";
+import LikeBtn from "./LikesCount";
+import supabase from "../supabaseClient";
 
 const MainFeed = ({ userInput }) => {
   const dispatch = useDispatch();
