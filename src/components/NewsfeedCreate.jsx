@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import { createPost } from "../API/posts";
@@ -8,21 +8,26 @@ import styled from "styled-components";
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import { getInitColorSchemeScript } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import supabase from "../supabaseClient";
 
 function NewsfeedCreate() {
   const [postContent, setPostContent] = useState("");
   const [postImgFile, setPostImgFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
 
+  const imgObj = useRef(null);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const resetStates = useCallback(() => {
-    setPostContent("");
+  const resetImg = useCallback(() => {
     setPostImgFile(null);
     setPreviewUrl("");
+  }, []);
+
+  const resetText = useCallback(() => {
+    setPostContent("");
   }, []);
 
   const handleContentChange = e => {
@@ -33,38 +38,77 @@ function NewsfeedCreate() {
     const fileObj = e.target.files[0];
     setPostImgFile(fileObj);
     const objectUrl = URL.createObjectURL(fileObj);
+    imgObj.current = objectUrl;
     setPreviewUrl(objectUrl);
   };
 
+  async function getUserNickname() {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    const { data: user_data, error } = await supabase.from("user_data").select("nickname, mbti").eq("id", user.id);
+    if (error) {
+      alert("닉네임이 존재하지 않습니다. 현재 계정을 삭제 후 다시 생성하여 주십시오.");
+      return;
+    }
+    console.log(user_data);
+    return [user_data[0].nickname, user_data[0].mbti, user];
+  }
+
   const sendContent = async e => {
     e.preventDefault();
+
+    if (!confirm("작성된 내용을 게시할까요?")) {
+      return;
+    }
+
+    if (!postContent) {
+      alert("작성된 내용이 없습니다.");
+      return;
+    }
+
+    const [userNickname, userMbti, user] = await getUserNickname();
 
     if (postImgFile) {
       // 사용자가 이미지 선택 했을 때
       uploadFile(postImgFile).then(img_content => {
         createPost({
-          id: uuidv4(),
           img_content,
           text_content: postContent,
-          user_name: "작성자 이름",
+          user_name: userNickname,
+          user_id: user.id,
+          mbti: userMbti,
         }).then(([newPost]) => {
           dispatch(addPost(newPost));
-          resetStates();
+          resetImg();
+          resetText();
         });
       });
       return;
     }
     // 이미지 선택 안했을 때
     createPost({
-      id: uuidv4(),
       text_content: postContent,
+      user_name: userNickname,
+      user_id: user.id,
+      mbti: userMbti,
     }).then(([newPost]) => {
       dispatch(addPost(newPost));
-      resetStates();
+      resetImg();
+      resetText();
     });
+
+    navigate("../");
   };
 
-  const goBackPage = () => {
+  const cancelImgFile = imgObj => {
+    event.preventDefault();
+    URL.revokeObjectURL(imgObj.current); // 문제 : 삭제 후 같은 이미지를 다시 올리는 작업이 불가하다
+    resetImg();
+  };
+
+  const goBackPage = e => {
+    e.preventDefault();
     navigate(-1);
   };
 
@@ -77,13 +121,24 @@ function NewsfeedCreate() {
           </StExitBtn>
           <StTextarea id="postContent" value={postContent} onChange={handleContentChange} placeholder="지금 무슨 생각을 하고 계신가요?"></StTextarea>
         </StTextareaWrap>
-        <StToolWrap>{previewUrl ? <img src={previewUrl} alt="미리보기 이미지" width={45} /> : <StNoImg>이미지 없음</StNoImg>}</StToolWrap>
+        <StToolWrap>
+          {previewUrl ? (
+            <StImgPreview>
+              <img src={previewUrl} alt="미리보기 이미지" width={45} />
+              <StCancelBtn onClick={() => cancelImgFile(imgObj)}>
+                <CloseIcon style={stCancelIcon} />
+              </StCancelBtn>
+            </StImgPreview>
+          ) : (
+            <StNoImg>이미지 없음</StNoImg>
+          )}
+        </StToolWrap>
         <StToolWrap>
           <StPhotoInputWrap>
             <AddPhotoAlternateIcon style={stPhotoIcon} />
             <StInput type="file" id="postImage" accept="image/*" onChange={handleImageChange} />
           </StPhotoInputWrap>
-          <StSendBtn /* onClick={sendText} */>
+          <StSendBtn>
             <StSpan>등록하기</StSpan>
             <SendIcon style={stSendIcon} />
           </StSendBtn>
@@ -102,7 +157,17 @@ const StForm = styled.form`
   margin-left: -300px;
   margin-top: -250px;
 `;
+const StCancelBtn = styled.button`
+  margin-left: 10px;
 
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  text-align: center;
+
+  border: 0;
+  background-color: #fefefe7a;
+`;
 const StWriteWrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -187,6 +252,11 @@ const StSpan = styled.span`
   font-size: 1rem;
   font-weight: 700;
 `;
+const StImgPreview = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const stCloseIcon = {
   fontSize: "1.4rem",
@@ -203,4 +273,8 @@ const stPhotoIcon = {
 const stSendIcon = {
   fontSize: "1rem",
   marginTop: "2px",
+};
+const stCancelIcon = {
+  fontSize: "1rem",
+  marginLeft: "-5px",
 };
