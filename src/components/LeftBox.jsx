@@ -3,7 +3,6 @@ import styled from "styled-components";
 import DropdownPack from "./DropdownPack";
 import Login from "./Login";
 import { useEffect, useState } from "react";
-import { getId } from "../API/authkeep";
 import supabase from "../supabaseClient";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsLoggedIn } from "../redux/slices/isLoggedInSlice";
@@ -122,7 +121,6 @@ const Logo = styled.div`
   width: 90px;
   height: 90px;
   margin: -20px 0 0 -30px;
-  cursor: pointer;
 `;
 
 const PostButton = styled.button`

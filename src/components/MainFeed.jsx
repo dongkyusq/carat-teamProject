@@ -42,7 +42,6 @@ const MainFeed = ({ userInput }) => {
       {filteredPosts.map((post, index) => (
         <ListItem key={index}>
           <UserInfo>
-            <UserImg src="/src/assets/User.jpg" alt="User" />
             <UserName>{post.user_name}</UserName>
             <TimeBox>{formatDate(post.created_at)}</TimeBox>
           </UserInfo>
