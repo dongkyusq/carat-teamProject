@@ -15,8 +15,6 @@ function NewsfeedUpdate() {
   const [postImgFile, setPostImgFile] = useState(null); //slice 분리 필요
   const [previewUrl, setPreviewUrl] = useState(""); //slice 분리 필요
 
-  const post = useSelector(state => state.post);
-
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
