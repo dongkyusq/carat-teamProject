@@ -107,8 +107,11 @@ const StMainContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
-  border-left: solid 1px #cc8798;
-  border-right: solid 1px #cc8798;
+  /* border-left: solid 1px #cc8798;
+  border-right: solid 1px #cc8798; */
+  height: 100vh;
+  border-right: solid 1px #f8caca;
+  border-left:  solid 1px #f8caca;
 `;
 
 const StHeader = styled.div`
@@ -127,6 +130,7 @@ const StyledArrowBackIcon = styled(ArrowBackIcon)`
   &:hover {
     color: #ddd;
   }
+
 `;
 
 const StBackground = styled.div`
