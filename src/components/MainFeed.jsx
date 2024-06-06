@@ -4,6 +4,8 @@ import CommentIcon from "@mui/icons-material/Comment";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPosts } from "../redux/slices/postSortSlice";
+import LikeButton from "./LikesCount";
+import LikeBtn from "./LikesCount";
 
 const MainFeed = ({ userInput }) => {
   const dispatch = useDispatch();
@@ -54,6 +56,7 @@ const MainFeed = ({ userInput }) => {
                 <FavoriteBorderIcon sx={{ fontSize: "30px", color: "white", "&:hover": { color: "#f8cacc" } }} />
                 <LikesCount>{post.likes}</LikesCount>
               </Button>
+              <LikeBtn />
             </IconListBox>
           </FeedContent>
         </ListItem>
