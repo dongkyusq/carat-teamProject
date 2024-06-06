@@ -83,7 +83,6 @@ function NewsfeedCreate() {
           resetText();
         });
       });
-      return;
     }
     // 이미지 선택 안했을 때
     createPost({
@@ -95,6 +94,7 @@ function NewsfeedCreate() {
       dispatch(addPost(newPost));
       resetImg();
       resetText();
+      navigate("../");
     });
 
     navigate("../");

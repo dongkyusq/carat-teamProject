@@ -84,6 +84,7 @@ const MainFeed = ({ userInput }) => {
         )}
       </CommentModal>
     </>
+
   );
 };
 
@@ -148,14 +149,6 @@ const UserInfo = styled.div`
   align-items: center;
   text-align: center;
   margin-bottom: ${props => props.$marginBottom || "20px"};
-`;
-
-const UserImg = styled.img`
-  border-radius: 100%;
-  background: #f8cacc;
-  width: ${props => props.$width || "50px"};
-  height: ${props => props.$height || "50px"};
-  margin-right: ${props => props.$marginRight || "15px"};
 `;
 
 const UserName = styled.span`
