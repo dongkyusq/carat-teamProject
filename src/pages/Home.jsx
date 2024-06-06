@@ -6,6 +6,43 @@ import PopularPost from "../components/PopularPost";
 import Weather from "../components/Weather";
 import { useState } from "react";
 
+const FeedBox = ({ userInput }) => {
+  return (
+    <Box $width="65%">
+      <BoxInner>
+        <MainFeed userInput={userInput} />
+      </BoxInner>
+    </Box>
+  );
+};
+
+const RightBox = ({ userInput, setUserInput }) => {
+  return (
+    <Box $width="20%" $minWidth="350px" style={{ border: "0" }}>
+      <BoxInner>
+        <Search userInput={userInput} setUserInput={setUserInput} />
+        <PopularPost />
+        <Weather />
+        <CopyRight>
+          <p>박채수 윤새라 이성찬 양동규 유수지 이녕수</p>
+          <p>copyright ⓒ 2024 캐럿 All right reserved.</p>
+        </CopyRight>
+      </BoxInner>
+    </Box>
+  );
+};
+
+export default function Home() {
+  const [userInput, setUserInput] = useState("");
+  return (
+    <LayoutContainer>
+      <LeftBox />
+      <FeedBox userInput={userInput} setUserInput={setUserInput} />
+      <RightBox userInput={userInput} setUserInput={setUserInput} />
+    </LayoutContainer>
+  );
+}
+
 const LayoutContainer = styled.div`
   display: flex;
   flex-flow: row nowrap;
@@ -44,40 +81,3 @@ const CopyRight = styled.div`
     margin-bottom: 0;
   }
 `;
-
-const FeedBox = ({ userInput }) => {
-  return (
-    <Box $width="65%">
-      <BoxInner>
-        <MainFeed userInput={userInput} />
-      </BoxInner>
-    </Box>
-  );
-};
-
-const RightBox = ({ userInput, setUserInput }) => {
-  return (
-    <Box $width="20%" $minWidth="350px" style={{ border: "0" }}>
-      <BoxInner>
-        <Search userInput={userInput} setUserInput={setUserInput} />
-        <PopularPost />
-        <Weather />
-        <CopyRight>
-          <p>박채수 윤새라 이성찬 양동규 유수지 이녕수</p>
-          <p>copyright ⓒ 2024 캐럿 All right reserved.</p>
-        </CopyRight>
-      </BoxInner>
-    </Box>
-  );
-};
-
-export default function Home() {
-  const [userInput, setUserInput] = useState("");
-  return (
-    <LayoutContainer>
-      <LeftBox />
-      <FeedBox userInput={userInput} setUserInput={setUserInput} />
-      <RightBox userInput={userInput} setUserInput={setUserInput} />
-    </LayoutContainer>
-  );
-}

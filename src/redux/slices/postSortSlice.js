@@ -18,8 +18,6 @@ export const fetchPosts = createAsyncThunk("posts/fetchPosts", async filter => {
 
   const [postData] = await Promise.all([postsQuery]);
 
-  console.log("Posts data:", postData);
-
   return { posts: postData.data };
 });
 
