@@ -51,6 +51,7 @@ function NewsfeedCreate() {
       alert("닉네임이 존재하지 않습니다. 현재 계정을 삭제 후 다시 생성하여 주십시오.");
       return;
     }
+    console.log(user_data);
     return [user_data[0].nickname, user_data[0].mbti, user];
   }
 
