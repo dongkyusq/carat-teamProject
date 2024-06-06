@@ -143,7 +143,7 @@ const SignUp = styled.div`
   color: #FF6F61;
   font-size: 15px;
   cursor: pointer;
-
+d
   &:hover {
     text-decoration: underline;
   }
