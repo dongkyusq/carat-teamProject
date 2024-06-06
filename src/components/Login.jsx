@@ -16,6 +16,11 @@ const Login = ({ isModalOpen, setIsModalOpen }) => {
 
   const signInUser = async e => {
     e.preventDefault();
+    if (!idRef.current.value.trim() || !pwRef.current.value.trim()) {
+      alert("이메일 또는 비밀번호가 제대로 입력되지 않았습니다. 다시 시도해주세요.");
+      return;
+    }
+
     const { data, error } = await supabase.auth.signInWithPassword({
       email: idRef.current.value,
       password: pwRef.current.value,
@@ -23,6 +28,7 @@ const Login = ({ isModalOpen, setIsModalOpen }) => {
 
     if (error) {
       console.log(error);
+      alert("유효하지 않은 이메일 또는 비밀번호를 입력하셨습니다. 다시 시도해주세요.");
     } else {
       console.log("login: ", data);
       alert("로그인이 완료되었습니다");
