@@ -24,8 +24,8 @@ const LeftBox = () => {
     navigate("/post"); // 새글 등록창으로 이동
   };
 
-  const navigateToHome = () => {
-    navigate(-1);
+  const goMyPage = () => {
+    navigate("/mypage");
   };
 
   const navigateToMyPage = () => {
@@ -96,11 +96,11 @@ const LeftBox = () => {
   return (
     <Box>
       <BoxInner>
-        <Logo onClick={navigateToHome}>
+        <Logo>
           <LogoImg src="/src/assets/logo.png" alt="News Feed Logo" width="100%" height="100%" />
         </Logo>
         <UserBox>
-          <UserInfo>
+          <UserInfo onClick={goMyPage}>
             <UserImg src={userImg} alt="Login" />
             <UserName>{isLoggedIn ? userName : "로그인이 필요합니다."}</UserName>
           </UserInfo>
@@ -164,6 +164,7 @@ const UserInfo = styled.div`
   flex-flow: row nowrap;
   align-items: center;
   text-align: center;
+  cursor: pointer;
   margin-bottom: ${props => props.$marginBottom || "20px"};
 `;
 
@@ -172,7 +173,6 @@ const UserImg = styled.img`
   background: #f8cacc;
   width: 50px;
   height: 50px;
-  cursor: pointer;
 `;
 
 const UserName = styled.span`
