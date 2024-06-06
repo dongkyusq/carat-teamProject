@@ -2,17 +2,20 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import supabase from "../supabaseClient";
 import ProfileEdit from "../components/ProfileEdit";
 import ImageUploadModal from "../components/ImageUploadModal";
+import UserPosts from "../components/UserPosts";
+import { fetchPosts } from "../redux/slices/postSortSlice";
 
 const MyPage = () => {
   const [profile, setProfile] = useState(null);
   const [editing, setEditing] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadType, setUploadType] = useState("");
-
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // 프로필 데이터 조회
   useEffect(() => {
@@ -21,19 +24,19 @@ const MyPage = () => {
         data: { user },
       } = await supabase.auth.getUser();
       if (user) {
-        // 배열이 아닌 id 객체만 받기 위해 single() 메서드 사용
         const { data, error } = await supabase.from("user_data").select("*").eq("id", user.id).single();
         if (error) {
           console.error("fetching 에러:", error);
         } else {
           setProfile(data);
+          dispatch(fetchPosts()); // 게시글 가져오기
         }
       } else {
         navigate("/"); // 로그인되지 않은 경우 메인 페이지로 이동
       }
     };
     fetchProfile();
-  }, [navigate]);
+  }, [navigate, dispatch]);
 
   // 프로필 저장 핸들러
   const handleSave = async updatedProfile => {
@@ -89,6 +92,9 @@ const MyPage = () => {
       </StProfileContainer>
       {editing && <ProfileEdit profile={profile} onClose={() => setEditing(false)} onSave={handleSave} />}
       {uploading && <ImageUploadModal onClose={() => setUploading(false)} onSave={handleImageUpload} type={uploadType} />}
+
+      {/* UserPosts 컴포넌트 추가 */}
+      <UserPosts userId={profile.id} />
     </StMainContainer>
   );
 };
@@ -103,11 +109,8 @@ const StMainContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
-  /* border-left: solid 1px #cc8798;
-  border-right: solid 1px #cc8798; */
-  height: 100vh;
-  border-right: solid 1px #f8caca;
-  border-left:  solid 1px #f8caca;
+  border-left: solid 1px #cc8798;
+  border-right: solid 1px #cc8798;
 `;
 
 const StHeader = styled.div`
@@ -126,7 +129,6 @@ const StyledArrowBackIcon = styled(ArrowBackIcon)`
   &:hover {
     color: #ddd;
   }
-
 `;
 
 const StBackground = styled.div`
