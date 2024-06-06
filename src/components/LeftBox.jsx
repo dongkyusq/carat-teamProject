@@ -56,20 +56,6 @@ const LeftBox = () => {
     }
   };
 
-  // 로그인 유지
-  // useEffect(() => {
-  //   const checkLoginStatus = async () => {
-  //     const userId = await getId();
-  //     if (userId) {
-  //       setIsLoggedIn(true);
-  //     } else {
-  //       setIsLoggedIn(false);
-  //     }
-  //   };
-
-  //   checkLoginStatus();
-  // }, []);
-
   const checkLoginStatus = async () => {
     const {
       data: { user },
@@ -110,7 +96,7 @@ const LeftBox = () => {
         </UserBox>
         <PostButton onClick={goPostPage}>새글 등록하기</PostButton>
       </BoxInner>
-      <Login isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} /> {/* Login 컴포넌트에 props 전달 */}
+      <Login isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
     </Box>
   );
 };

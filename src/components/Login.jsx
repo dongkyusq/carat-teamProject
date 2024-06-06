@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import CloseIcon from "@mui/icons-material/Close";
 import { setIsLoggedIn } from "../redux/slices/isLoggedInSlice";
 
-const Login = ({ isModalOpen, setIsModalOpen, setIsLoggedIn }) => {
+const Login = ({ isModalOpen, setIsModalOpen }) => {
   const navigate = useNavigate();
   const idRef = useRef();
   const pwRef = useRef();
@@ -28,7 +28,7 @@ const Login = ({ isModalOpen, setIsModalOpen, setIsLoggedIn }) => {
       alert("로그인이 완료되었습니다");
       dispatch(setIsLoggedIn(true));
       setIsModalOpen(false);
-      // navigate('/');
+      navigate("/");
     }
   };
 

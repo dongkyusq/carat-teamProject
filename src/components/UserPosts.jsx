@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import CommentIcon from "@mui/icons-material/Comment";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import UserBtns from "./UserBtns";
 
 const UserPosts = ({ userId }) => {
   const posts = useSelector(state => state.posts.posts);
@@ -22,13 +23,16 @@ const UserPosts = ({ userId }) => {
             <FeedContent>
               <Posts>{post.text_content}</Posts>
               <IconListBox>
-                <Button>
-                  <CommentIcon sx={{ fontSize: "30px", color: "white", "&:hover": { color: "#f8cacc" } }} />
-                </Button>
-                <Button>
-                  <FavoriteBorderIcon sx={{ fontSize: "30px", color: "white", "&:hover": { color: "#f8cacc" } }} />
-                  <LikesCount>{post.likes}</LikesCount>
-                </Button>
+                <ButtonWrap>
+                  <Button>
+                    <CommentIcon sx={iconStyle} />
+                  </Button>
+                  <Button>
+                    <FavoriteBorderIcon sx={iconStyle} />
+                    <LikesCount>{post.likes}</LikesCount>
+                  </Button>
+                </ButtonWrap>
+                <UserBtns post={post} />
               </IconListBox>
             </FeedContent>
           </ListItem>
@@ -112,8 +116,12 @@ const Posts = styled.div`
 
 const IconListBox = styled.div`
   display: flex;
-  margin: 0 0 5px 15px;
-  gap: 10px;
+  justify-content: space-between;
+  padding: 10px;
+`;
+
+const ButtonWrap = styled.div`
+  display: flex;
 `;
 
 const Button = styled.button`
@@ -128,5 +136,11 @@ const LikesCount = styled.p`
   font-size: 20px;
   color: white;
 `;
+
+const iconStyle = {
+  fontSize: "30px",
+  color: "white",
+  "&:hover": { color: "#f8cacc" },
+};
 
 export default UserPosts;
