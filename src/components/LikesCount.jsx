@@ -6,53 +6,78 @@ import styled from "styled-components";
 
 export default function LikeBtn({ postId }) {
   const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
   const [userId, setUserId] = useState(null);
+  const [currentLikes, setCurrentLikes] = useState(0);
+
+  const fetchPostLikes = async () => {
+    const { data: post, error: postError } = await supabase.from("posts").select("likes").eq("id", postId);
+    if (postError) {
+      console.error("Post error:", postError);
+      return;
+    }
+    if (post.length > 0) {
+      setCurrentLikes(post[0].likes);
+    }
+  };
+
+  const fetchUserLikes = async userId => {
+    if (!userId) {
+      setLiked(false);
+      return;
+    }
+    const { data: likes, error: likesError } = await supabase.from("likes").select("likes_user_id").eq("likes_post", postId).eq("likes_user_id", userId);
+
+    if (likesError) {
+      console.error("Likes error:", likesError);
+      return;
+    }
+
+    const isLiked = likes.length > 0;
+    setLiked(isLiked);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
-
+      const { data: userResponse, error: userError } = await supabase.auth.getUser();
+      console.log("User response:", userResponse); // 사용자 정보 콘솔에 출력
       if (userError) {
         console.error("User error:", userError);
         return;
       }
 
-      if (user) {
-        setUserId(user.id);
+      const userId = userResponse?.user?.id || null;
+      setUserId(userId);
 
-        const { data: likes, error: likesError } = await supabase.from("likes").select("likes_user_id").eq("likes_post", postId);
-
-        if (likesError) {
-          console.error("Likes error:", likesError);
-          return;
-        }
-
-        const isLiked = likes ? likes.some(like => like.likes_user_id === user.id) : false;
-        setLiked(isLiked);
-
-        const { data: post, error: postError } = await supabase.from("posts").select("likes").eq("id", postId);
-
-        if (postError) {
-          console.error("Post error:", postError);
-          return;
-        }
-
-        setLikeCount(post.likes || 0);
-      }
+      await fetchPostLikes();
+      await fetchUserLikes(userId);
     };
 
     fetchData();
   }, [postId]);
+
+  useEffect(() => {
+    if (userId !== null) {
+      fetchUserLikes(userId);
+    }
+  }, [userId, postId]);
 
   const handleLikeBtn = async () => {
     if (!userId) {
       alert("로그인 후 누를 수 있습니다.");
       return;
     }
+
+    const { data: post, error: postError } = await supabase.from("posts").select("*").eq("id", postId);
+    if (postError) {
+      console.error("Post error:", postError);
+      return;
+    }
+    if (post.length === 0) {
+      console.error("No post found with the given postId:", postId);
+      return;
+    }
+
+    let updatedLikes = currentLikes;
 
     if (liked) {
       const { error: deleteError } = await supabase.from("likes").delete().eq("likes_post", postId).eq("likes_user_id", userId);
@@ -62,18 +87,7 @@ export default function LikeBtn({ postId }) {
         return;
       }
 
-      const { error: postError } = await supabase
-        .from("posts")
-        .update({ likes: likeCount - 1 })
-        .eq("id", postId);
-
-      if (postError) {
-        console.error("Post update error:", postError);
-        return;
-      }
-
-      setLiked(false);
-      setLikeCount(prevCount => prevCount - 1);
+      updatedLikes -= 1;
     } else {
       const { error: insertError } = await supabase.from("likes").insert([{ likes_post: postId, likes_user_id: userId }]);
 
@@ -82,25 +96,24 @@ export default function LikeBtn({ postId }) {
         return;
       }
 
-      const { error: postError } = await supabase
-        .from("posts")
-        .update({ likes: likeCount + 1 })
-        .eq("id", postId);
-
-      if (postError) {
-        console.error("Post update error:", postError);
-        return;
-      }
-
-      setLiked(true);
-      setLikeCount(prevCount => prevCount + 1);
+      updatedLikes += 1;
     }
+
+    const { error: updateError } = await supabase.from("posts").update({ likes: updatedLikes }).eq("id", postId);
+
+    if (updateError) {
+      console.error("Post update error:", updateError);
+      return;
+    }
+
+    setCurrentLikes(updatedLikes);
+    setLiked(!liked);
   };
 
   return (
     <StyledButton onClick={handleLikeBtn}>
       {liked ? <FavoriteIcon sx={iconStyle} /> : <FavoriteBorderIcon sx={iconStyle} />}
-      <LikesCount>{likeCount}</LikesCount>
+      <LikesCount>{currentLikes}</LikesCount>
     </StyledButton>
   );
 }
