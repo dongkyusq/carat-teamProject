@@ -4,21 +4,33 @@ import DropdownPack from "./DropdownPack";
 import Login from "./Login";
 import { useEffect, useState } from "react";
 import { getId } from "../API/authkeep";
-
 import supabase from "../supabaseClient";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsLoggedIn } from "../redux/slices/isLoggedInSlice";
 
 const LeftBox = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 추가
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태 추가
+  const [userName, setUserName] = useState(""); // 로그인한 유저이름 상태 추가
+  const [userImg, setUserImg] = useState(""); // 로그인한 유저프로필 상태 추가
 
+  const isLoggedIn = useSelector(state => state.isLoggedIn);
 
-  const goPostPage = () => {
-    navigate("/post"); // 새글 등록창으로 이동
+  const goPostPage = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      alert("로그인한 유저만 게시물을 작성할 수 있습니다.");
+      return;
+    }
+    navigate("/post", { state: "new" }); // 새글 등록창으로 이동
   };
 
-  const navigateToHome = () => {
-    navigate(-1);
+  const goMyPage = () => {
+    navigate("/mypage");
   };
 
   const signOutUser = async () => {
@@ -26,8 +38,8 @@ const LeftBox = () => {
     console.log("signout: ", { data, error });
 
     if (!error) {
-      setIsLoggedIn(false);
-      alert('로그아웃이 완료되었습니다');
+      dispatch(setIsLoggedIn(false));
+      alert("로그아웃이 완료되었습니다");
     } else {
       console.log(error);
     }
@@ -41,41 +53,47 @@ const LeftBox = () => {
     }
   };
 
-  //로그인 유지
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      const userId = await getId();
-      if (userId) {
-        setIsLoggedIn(true);
+  const checkLoginStatus = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (user) {
+      dispatch(setIsLoggedIn(true));
+      const { data: userData, error } = await supabase.from("user_data").select("nickname, profile").eq("id", user.id).single();
+      if (userData && !error) {
+        setUserName(userData.nickname);
+        setUserImg(userData.profile || "/public/img/profileLogo.png");
       } else {
-        setIsLoggedIn(false);
+        console.error("Failed to fetch user data", error);
       }
-    };
+    } else {
+      setUserName("");
+      setUserImg("public/img/profileLogo.png");
+      dispatch(setIsLoggedIn(false)); // 로그아웃 상태로 변경
+    }
+  };
 
+  useEffect(() => {
     checkLoginStatus();
-  }, []);
-
-  console.log(isLoggedIn);
+  }, [isLoggedIn]);
 
   return (
     <Box>
       <BoxInner>
-        <Logo onClick={navigateToHome}>
+        <Logo>
           <LogoImg src="/src/assets/logo.png" alt="News Feed Logo" width="100%" height="100%" />
         </Logo>
         <UserBox>
-          <UserInfo>
-            <UserImg src="public\img\profileLogo.png" alt="Login" />
-            <UserName>{isLoggedIn ? '환영합니다!' : '반갑습니다!'}</UserName>
+          <UserInfo onClick={goMyPage}>
+            <UserImg src={userImg} alt="Login" />
+            <UserName>{isLoggedIn ? userName : "로그인이 필요합니다."}</UserName>
           </UserInfo>
-          <LoginBtn onClick={handlebtnClick}>
-            {isLoggedIn ? '로그아웃' : '로그인'}
-          </LoginBtn>
+          <LoginBtn onClick={handlebtnClick}>{isLoggedIn ? "로그아웃" : "로그인"}</LoginBtn>
+          <DropdownPack />
         </UserBox>
-        <DropdownPack />
         <PostButton onClick={goPostPage}>새글 등록하기</PostButton>
       </BoxInner>
-      <Login isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} setIsLoggedIn={setIsLoggedIn} /> {/* Login 컴포넌트에 props 전달 */}
+      <Login isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
     </Box>
   );
 };
@@ -103,7 +121,7 @@ const Logo = styled.div`
   flex-shrink: 0;
   width: 90px;
   height: 90px;
-  margin: -20px 0 30px -30px;
+  margin: -20px 0 0 -30px;
   cursor: pointer;
 `;
 
@@ -130,6 +148,7 @@ const UserInfo = styled.div`
   flex-flow: row nowrap;
   align-items: center;
   text-align: center;
+  cursor: pointer;
   margin-bottom: ${props => props.$marginBottom || "20px"};
 `;
 
@@ -161,6 +180,7 @@ const LoginBtn = styled.button`
   color: #141233;
   font-weight: bold;
   font-size: 20px;
+  margin-bottom: 10px;
   cursor: pointer;
 
   &:hover {
@@ -170,6 +190,5 @@ const LoginBtn = styled.button`
 `;
 
 const UserBox = styled.div`
-  margin-top: -50px;
-  margin-bottom: -140px;
+  margin-top: 0;
 `;

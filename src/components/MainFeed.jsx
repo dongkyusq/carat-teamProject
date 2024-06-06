@@ -1,48 +1,20 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import CommentIcon from "@mui/icons-material/Comment";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPosts } from "../redux/slices/postSortSlice";
 import supabase from "../supabaseClient";
-
-const fetchPosts = async () => {
-  const { data, error } = await supabase.from("posts").select("*");
-  if (error) {
-    console.log("Error fetching posts:", error);
-  }
-  return data;
-};
-
-const fetchLikes = async userId => {
-  const { data, error } = await supabase.from("likes").select("likes_post").eq("likes_user_id", userId);
-  if (error) {
-    console.log("Error fetching likes:", error);
-  }
-  return data;
-};
+import UserBtns from "./UserBtns";
 
 const MainFeed = ({ userInput }) => {
-  const [posts, setPosts] = useState([]);
-  const currentUser = useSelector(state => state.user?.currentUser);
-  const [likedPosts, setLikedPosts] = useState([]);
+  const dispatch = useDispatch();
+  const posts = useSelector(state => state.posts.posts);
+  const filter = useSelector(state => state.posts.filter) || "게시물정렬";
 
   useEffect(() => {
-    const fetchData = async () => {
-      const posts = await fetchPosts();
-      setPosts(posts || []);
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const fetchUserLikes = async () => {
-      if (currentUser && currentUser.id) {
-        const likes = await fetchLikes(currentUser.id);
-        setLikedPosts(likes.map(like => like.likes_post_id));
-      }
-    };
-    fetchUserLikes();
-  }, [currentUser]);
+    dispatch(fetchPosts(filter));
+  }, [dispatch, filter]);
 
   const formatDate = dateString => {
     const date = new Date(dateString);
@@ -51,30 +23,19 @@ const MainFeed = ({ userInput }) => {
     const day = date.getDate().toString().padStart(2, "0");
     const options = { hour: "2-digit", minute: "2-digit" };
     const formattedTime = date.toLocaleTimeString("ko-KR", options);
-    return `${year}년 ${month}월 ${day}일 / ${formattedTime}`;
+    return `${year}년${month}월${day}일 / ${formattedTime}`;
   };
 
-  const filteredPosts = posts.filter(post => post.text_content.toLowerCase().includes(userInput.toLowerCase()));
-
-  const handleAdd = async post => {
-    if (!currentUser || !currentUser.id) {
-      alert("로그인 후 좋아요를 누를 수 있습니다.");
-      return;
-    }
-
-    if (likedPosts.includes(post.id)) {
-      alert("이미 좋아요를 눌렀습니다.");
-      return;
-    }
-
-    const { data, error } = await supabase.from("likes").insert([{ likes_post: post.id, likes_user_id: currentUser.id }]);
-
-    if (error) {
-      console.log("Error inserting like:", error);
-    } else {
-      setLikedPosts([...likedPosts, post.id]);
-    }
-  };
+  const filteredPosts = posts
+    .filter(post => post.text_content.toLowerCase().includes(userInput.toLowerCase()))
+    .sort((a, b) => {
+      if (filter === "인기 게시물 순") {
+        if (a.likes === null) return 1;
+        if (b.likes === null) return -1;
+        return b.likes - a.likes;
+      }
+      return 0;
+    });
 
   return (
     <List>
@@ -88,12 +49,16 @@ const MainFeed = ({ userInput }) => {
           <FeedContent>
             <Posts>{post.text_content}</Posts>
             <IconListBox>
-              <Button>
-                <CommentIcon style={commentIcon} />
-              </Button>
-              <Button onClick={() => handleAdd(post)}>
-                <FavoriteBorderIcon style={likeIcon} />
-              </Button>
+              <ButtonWrap>
+                <Button>
+                  <CommentIcon sx={iconStyle} />
+                </Button>
+                <Button>
+                  <FavoriteBorderIcon sx={iconStyle} />
+                  <LikesCount>{post.likes}</LikesCount>
+                </Button>
+              </ButtonWrap>
+              <UserBtns post={post} />
             </IconListBox>
           </FeedContent>
         </ListItem>
@@ -101,6 +66,22 @@ const MainFeed = ({ userInput }) => {
     </List>
   );
 };
+
+const ButtonWrap = styled.div`
+  display: flex;
+`;
+
+const iconStyle = {
+  fontSize: "30px",
+  color: "white",
+  "&:hover": { color: "#f8cacc" },
+};
+
+const LikesCount = styled.p`
+  margin: 4px 0 0 2px;
+  font-size: 20px;
+  color: white;
+`;
 
 const TimeBox = styled.p`
   margin-left: 10px;
@@ -112,21 +93,13 @@ const Button = styled.button`
   border: 0;
   background-color: transparent;
   cursor: pointer;
+  display: flex;
 `;
-
-const commentIcon = {
-  fontSize: "40px",
-  color: "white",
-};
-
-const likeIcon = {
-  fontSize: "40px",
-  color: "white",
-};
 
 const IconListBox = styled.div`
   display: flex;
-  margin: 0 0 5px 15px;
+  justify-content: space-between;
+  padding: 10px;
 `;
 
 const List = styled.ul`
@@ -136,7 +109,7 @@ const List = styled.ul`
   height: 100%;
   flex-grow: 1;
   overflow-y: auto;
-  margin-bottom: unset;
+  margin-bottom: ${props => props.$marginBottom || "unset"};
 
   &::-webkit-scrollbar {
     display: none;
@@ -146,7 +119,7 @@ const List = styled.ul`
 const ListItem = styled.li`
   display: flex;
   flex-flow: column nowrap;
-  margin-bottom: 50px;
+  margin-bottom: ${props => props.$marginBottom || "50px"};
 `;
 
 const UserInfo = styled.div`
@@ -154,19 +127,19 @@ const UserInfo = styled.div`
   flex-flow: row nowrap;
   align-items: center;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: ${props => props.$marginBottom || "20px"};
 `;
 
 const UserImg = styled.img`
   border-radius: 100%;
   background: #f8cacc;
-  width: 50px;
-  height: 50px;
-  margin-right: 15px;
+  width: ${props => props.$width || "50px"};
+  height: ${props => props.$height || "50px"};
+  margin-right: ${props => props.$marginRight || "15px"};
 `;
 
 const UserName = styled.span`
-  font-size: 18px;
+  font-size: ${props => props.$fontSize || "18px"};
 `;
 
 const FeedContent = styled.div`
@@ -179,8 +152,9 @@ const Posts = styled.div`
   margin: 10px;
   padding: 20px;
   background: #ffd0d0;
-  border-radius: 20px;
+  border-radius: 15px;
   color: #000;
+  white-space: pre-line;
   word-wrap: break-word;
   word-break: keep-all;
 `;

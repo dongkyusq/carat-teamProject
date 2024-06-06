@@ -1,14 +1,14 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { v4 as uuidv4 } from "uuid";
 import { createPost } from "../API/posts";
 import { uploadFile } from "../API/storage";
-import { addPost } from "../redux/slices/postsSlice";
+import { addPost } from "../redux/slices/postSlice";
 import styled from "styled-components";
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { useNavigate } from "react-router-dom";
+import supabase from "../supabaseClient";
 
 function NewsfeedCreate() {
   const [postContent, setPostContent] = useState("");
@@ -39,9 +39,20 @@ function NewsfeedCreate() {
     const objectUrl = URL.createObjectURL(fileObj);
     imgObj.current = objectUrl;
     setPreviewUrl(objectUrl);
-    console.log(typeof objectUrl);
-    console.log(objectUrl);
   };
+
+  async function getUserNickname() {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    const { data: user_data, error } = await supabase.from("user_data").select("nickname, mbti").eq("id", user.id);
+    if (error) {
+      alert("닉네임이 존재하지 않습니다. 현재 계정을 삭제 후 다시 생성하여 주십시오.");
+      return;
+    }
+    console.log(user_data);
+    return [user_data[0].nickname, user_data[0].mbti, user];
+  }
 
   const sendContent = async e => {
     e.preventDefault();
@@ -55,13 +66,17 @@ function NewsfeedCreate() {
       return;
     }
 
+    const [userNickname, userMbti, user] = await getUserNickname();
+
     if (postImgFile) {
       // 사용자가 이미지 선택 했을 때
       uploadFile(postImgFile).then(img_content => {
         createPost({
-          id: uuidv4(),
           img_content,
           text_content: postContent,
+          user_name: userNickname,
+          user_id: user.id,
+          mbti: userMbti,
         }).then(([newPost]) => {
           dispatch(addPost(newPost));
           resetImg();
@@ -72,8 +87,10 @@ function NewsfeedCreate() {
     }
     // 이미지 선택 안했을 때
     createPost({
-      id: uuidv4(),
       text_content: postContent,
+      user_name: userNickname,
+      user_id: user.id,
+      mbti: userMbti,
     }).then(([newPost]) => {
       dispatch(addPost(newPost));
       resetImg();

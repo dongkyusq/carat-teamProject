@@ -1,15 +1,20 @@
-import React, { useRef, useState } from 'react';
-import Modal from '../pages/Modal';
-import styled from 'styled-components';
-import supabase from '../supabaseClient';
-import { useNavigate } from 'react-router-dom';
+import React, { useRef, useState } from "react";
+import Modal from "../pages/Modal";
+import styled from "styled-components";
+import supabase from "../supabaseClient";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import CloseIcon from "@mui/icons-material/Close";
+import { setIsLoggedIn } from "../redux/slices/isLoggedInSlice";
 
-const Login = ({ isModalOpen, setIsModalOpen, setIsLoggedIn }) => {
+const Login = ({ isModalOpen, setIsModalOpen }) => {
   const navigate = useNavigate();
   const idRef = useRef();
   const pwRef = useRef();
 
-  const signInUser = async (e) => {
+  const dispatch = useDispatch();
+
+  const signInUser = async e => {
     e.preventDefault();
     const { data, error } = await supabase.auth.signInWithPassword({
       email: idRef.current.value,
@@ -19,11 +24,11 @@ const Login = ({ isModalOpen, setIsModalOpen, setIsLoggedIn }) => {
     if (error) {
       console.log(error);
     } else {
-      console.log('login: ', data);
-      alert('로그인이 완료되었습니다');
-      setIsLoggedIn(true);
+      console.log("login: ", data);
+      alert("로그인이 완료되었습니다");
+      dispatch(setIsLoggedIn(true));
       setIsModalOpen(false);
-      // navigate('/');
+      navigate("/");
     }
   };
 
@@ -32,13 +37,16 @@ const Login = ({ isModalOpen, setIsModalOpen, setIsLoggedIn }) => {
   };
 
   const gotoJoin = () => {
-    navigate('/join');
+    navigate("/join");
   };
 
   return (
     <div>
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
+      <Modal isOpen={isModalOpen}>
         <LoginWrapper>
+          <CloseIconWrapper onClick={closeModal}>
+            <CloseIcon />
+          </CloseIconWrapper>
           <Circle />
           <Form>
             <LoginInput>
@@ -49,7 +57,9 @@ const Login = ({ isModalOpen, setIsModalOpen, setIsLoggedIn }) => {
               <Label>비밀번호:</Label>
               <Input type="password" placeholder="비밀번호를 입력하세요" ref={pwRef} required />
             </LoginInput>
-            <Button type="submit" onClick={signInUser}>로그인</Button>
+            <Button type="submit" onClick={signInUser}>
+              로그인
+            </Button>
             <SignUp onClick={gotoJoin}>회원가입</SignUp>
           </Form>
         </LoginWrapper>
@@ -61,7 +71,7 @@ const Login = ({ isModalOpen, setIsModalOpen, setIsLoggedIn }) => {
 export default Login;
 
 const Button = styled.button`
-  background-color: #FFD0D0;
+  background-color: #ffd0d0;
   color: black;
   border: none;
   padding: 10px 80px;
@@ -80,7 +90,7 @@ const LoginWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #CC8798;
+  background-color: #cc8798;
   padding: 20px;
   border-radius: 15px;
   width: 700px;
@@ -92,11 +102,11 @@ const LoginWrapper = styled.div`
 const Circle = styled.div`
   width: 50px;
   height: 50px;
-  background-color: #FFD0D0;
+  background-color: #ffd0d0;
   border-radius: 50%;
   position: absolute;
   top: -24px;
-  left: -24px; 
+  left: -24px;
   z-index: 1;
 `;
 
@@ -136,11 +146,23 @@ const Input = styled.input`
 `;
 
 const SignUp = styled.div`
-  color: #FF6F61;
+  color: #ff6f61;
   font-size: 15px;
   cursor: pointer;
+  d &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const CloseIconWrapper = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  font-size: 20px;
 
   &:hover {
-    text-decoration: underline;
+    transform: scale(1.2) translateY(-2px);
   }
 `;
