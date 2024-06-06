@@ -64,7 +64,7 @@ const MainFeed = ({ userInput }) => {
               <Posts>{post.text_content}</Posts>
               <IconListBox>
                 <ButtonWrap>
-                  <Button>
+                  <Button onClick={() => handleCommentClick(post)}>
                     <CommentIcon sx={iconStyle} />
                   </Button>
                   <LikeBtn postId={post.id} />

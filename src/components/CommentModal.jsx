@@ -48,7 +48,8 @@ const CommentModal = ({ isOpen, onClose, user_name, text_content }) => {
             <ProfileImg src={isLoggedIn && userDatas && userDatas[0]?.profile ? userDatas[0].profile : "public/img/profileLogo.png"} />
             <NameBox>{isLoggedIn && userDatas && userDatas[0]?.nickname ? userDatas[0].nickname : "비회원"}</NameBox>
           </UserBox>
-          <CommentInput Placeholder="{닉네임}님에게 답글 남기기..." />
+          <CommentInput placeholder={`${user_name}님에게 답글 남기기...`} />
+
           <AddCommentBtn>답글</AddCommentBtn>
         </CommentBox>
         <CloseButton onClick={onClose}>
