@@ -81,7 +81,6 @@ const PopularPost = () => {
       {filteredPosts.map((post, index) => (
         <ListItem key={index} $marginBottom="20px">
           <UserInfo $marginBottom="10px">
-            <UserImg src="/src/assets/User.jpg" alt="User" $width="30px" $height="30px" $marginRight="10px" />
             <UserName $fontSize="16px">{post.user_name}</UserName>
           </UserInfo>
           <RecentContent>

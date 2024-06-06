@@ -15,8 +15,6 @@ function NewsfeedUpdate() {
   const [postImgFile, setPostImgFile] = useState(null); //slice 분리 필요
   const [previewUrl, setPreviewUrl] = useState(""); //slice 분리 필요
 
-  const post = useSelector(state => state.post);
-
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -56,18 +54,6 @@ function NewsfeedUpdate() {
     setPreviewUrl(objectUrl);
   };
 
-  async function getUserNickname() {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    const { data: user_data, error } = await supabase.from("user_data").select("nickname, mbti").eq("id", user.id);
-    if (error) {
-      alert("닉네임이 존재하지 않습니다. 현재 계정을 삭제 후 다시 생성하여 주십시오.");
-      return;
-    }
-    return [user_data[0].nickname, user_data[0].mbti, user];
-  }
-
   const updateContent = async e => {
     e.preventDefault();
 
@@ -79,8 +65,6 @@ function NewsfeedUpdate() {
       alert("작성된 내용이 없습니다.");
       return;
     }
-
-    const [userNickname, userMbti, user] = await getUserNickname();
 
     if (postImgFile) {
       // 사용자가 이미지 선택 했을 때
