@@ -1,18 +1,12 @@
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import CommentIcon from "@mui/icons-material/Comment";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { fetchPosts } from "../redux/slices/postsSlice";
 
 const UserPosts = ({ userId }) => {
-  const dispatch = useDispatch();
   const posts = useSelector(state => state.posts.posts);
   const userPosts = posts.filter(post => post.user_id === userId);
-
-  useEffect(() => {
-    dispatch(fetchPosts());
-  }, [dispatch]);
 
   return (
     <PostList>
@@ -81,6 +75,12 @@ const UserName = styled.span`
   font-size: ${props => props.$fontSize || "18px"};
 `;
 
+const TimeBox = styled.p`
+  margin-left: 10px;
+  font-size: 13px;
+  color: #b7bec4;
+`;
+
 const FeedContent = styled.div`
   width: 100%;
   background: #cc8798;
@@ -114,12 +114,6 @@ const LikesCount = styled.p`
   margin: 4px 0 0 2px;
   font-size: 20px;
   color: white;
-`;
-
-const TimeBox = styled.p`
-  margin-left: 10px;
-  font-size: 13px;
-  color: #b7bec4;
 `;
 
 export default UserPosts;
