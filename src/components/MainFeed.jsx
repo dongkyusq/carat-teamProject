@@ -1,35 +1,24 @@
 import styled from "styled-components";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import CommentIcon from "@mui/icons-material/Comment";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPosts } from "../redux/slices/postSortSlice";
-import supabase from "../supabaseClient";
 import UserBtns from "./UserBtns";
+import CommentModal from "./CommentModal";
+import LikeBtn from "./LikesCount";
+import supabase from "../supabaseClient";
 
 const MainFeed = ({ userInput }) => {
   const dispatch = useDispatch();
   const posts = useSelector(state => state.posts.posts);
   const filter = useSelector(state => state.posts.filter) || "게시물정렬";
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
+
   useEffect(() => {
     dispatch(fetchPosts(filter));
   }, [dispatch, filter]);
-
-  const buttonClick = async () => {
-    try {
-      const { data, error } = await supabase.from("likes").insert([{ likes_post: postId, likes_user_id: "your_user_id", created_at: new Date() }]);
-
-      if (error) {
-        console.error("Error inserting like:", error);
-      } else {
-        console.log("Like inserted successfully:", data);
-        dispatch(fetchPosts(filter));
-      }
-    } catch (error) {
-      console.error("Error inserting like:", error.message);
-    }
-  };
 
   const formatDate = dateString => {
     const date = new Date(dateString);
@@ -39,6 +28,16 @@ const MainFeed = ({ userInput }) => {
     const options = { hour: "2-digit", minute: "2-digit" };
     const formattedTime = date.toLocaleTimeString("ko-KR", options);
     return `${year}년${month}월${day}일 / ${formattedTime}`;
+  };
+
+  const handleCommentClick = post => {
+    setSelectedPost(post);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedPost(null);
   };
 
   const filteredPosts = posts
@@ -53,32 +52,38 @@ const MainFeed = ({ userInput }) => {
     });
 
   return (
-    <List>
-      {filteredPosts.map((post, index) => (
-        <ListItem key={index}>
-          <UserInfo>
-            <UserImg src="/src/assets/User.jpg" alt="User" />
-            <UserName>{post.user_name}</UserName>
-            <TimeBox>{formatDate(post.created_at)}</TimeBox>
-          </UserInfo>
-          <FeedContent>
-            <Posts>{post.text_content}</Posts>
-            <IconListBox>
-              <ButtonWrap>
-                <Button>
-                  <CommentIcon sx={iconStyle} />
-                </Button>
-                <Button onClick={() => buttonClick(post.id)}>
-                  <FavoriteBorderIcon sx={iconStyle} />
-                  <LikesCount>{post.likes}</LikesCount>
-                </Button>
-              </ButtonWrap>
-              <UserBtns post={post} />
-            </IconListBox>
-          </FeedContent>
-        </ListItem>
-      ))}
-    </List>
+    <>
+      <List>
+        {filteredPosts.map((post, index) => (
+          <ListItem key={index}>
+            <UserInfo>
+              <UserImg src="/src/assets/User.jpg" alt="User" />
+              <UserName>{post.user_name}</UserName>
+              <TimeBox>{formatDate(post.created_at)}</TimeBox>
+            </UserInfo>
+            <FeedContent>
+              <Posts>{post.text_content}</Posts>
+              <IconListBox>
+                <ButtonWrap>
+                  <Button onClick={() => handleCommentClick(post)}>
+                    <CommentIcon sx={iconStyle} />
+                  </Button>
+                  <LikeBtn postId={post.id} />
+                </ButtonWrap>
+                <UserBtns post={post} />
+              </IconListBox>
+            </FeedContent>
+          </ListItem>
+        ))}
+      </List>
+      <CommentModal isOpen={isModalOpen} onClose={handleCloseModal}>
+        {selectedPost && (
+          <div>
+            <p>{selectedPost.text_content}</p>
+          </div>
+        )}
+      </CommentModal>
+    </>
   );
 };
 
