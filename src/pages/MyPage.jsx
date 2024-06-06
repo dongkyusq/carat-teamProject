@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import supabase from "../supabaseClient";
 import ProfileEdit from "../components/ProfileEdit";
 import ImageUploadModal from "../components/ImageUploadModal";
+import UserPosts from "../components/UserPosts";
 
 const MyPage = () => {
   const [profile, setProfile] = useState(null);
@@ -89,6 +90,9 @@ const MyPage = () => {
       </StProfileContainer>
       {editing && <ProfileEdit profile={profile} onClose={() => setEditing(false)} onSave={handleSave} />}
       {uploading && <ImageUploadModal onClose={() => setUploading(false)} onSave={handleImageUpload} type={uploadType} />}
+
+      {/* UserPosts 컴포넌트 추가 */}
+      <UserPosts userId={profile.id} />
     </StMainContainer>
   );
 };
