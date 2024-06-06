@@ -35,6 +35,10 @@ const postsSlice = createSlice({
     setFilter: (state, action) => {
       state.filter = action.payload;
     },
+    setSortPosts: (state, action) => {
+      const posts = action.payload;
+      return posts;
+    },
   },
   extraReducers: builder => {
     builder
@@ -52,5 +56,5 @@ const postsSlice = createSlice({
   },
 });
 
-export const { setFilter } = postsSlice.actions;
+export const { setFilter, setSortPosts } = postsSlice.actions;
 export default postsSlice.reducer;
