@@ -46,12 +46,13 @@ function NewsfeedCreate() {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    const { data: user_data, error } = await supabase.from("user_data").select("nickname").eq("id", user.id);
+    const { data: user_data, error } = await supabase.from("user_data").select("nickname, mbti").eq("id", user.id);
     if (error) {
       alert("닉네임이 존재하지 않습니다. 현재 계정을 삭제 후 다시 생성하여 주십시오.");
       return;
     }
-    return [user_data[0].nickname, user];
+    console.log(user_data);
+    return [user_data[0].nickname, user_data[0].mbti, user];
   }
 
   const sendContent = async e => {
@@ -66,7 +67,7 @@ function NewsfeedCreate() {
       return;
     }
 
-    const [userNickname, user] = await getUserNickname();
+    const [userNickname, userMbti, user] = await getUserNickname();
 
     if (postImgFile) {
       // 사용자가 이미지 선택 했을 때
@@ -76,6 +77,7 @@ function NewsfeedCreate() {
           text_content: postContent,
           user_name: userNickname,
           user_id: user.id,
+          mbti: userMbti,
         }).then(([newPost]) => {
           dispatch(addPost(newPost));
           resetImg();
@@ -89,6 +91,7 @@ function NewsfeedCreate() {
       text_content: postContent,
       user_name: userNickname,
       user_id: user.id,
+      mbti: userMbti,
     }).then(([newPost]) => {
       dispatch(addPost(newPost));
       resetImg();
