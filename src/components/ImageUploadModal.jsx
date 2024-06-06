@@ -2,11 +2,21 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import supabase from "../supabaseClient";
 
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 5MB
+
 const ImageUploadModal = ({ onClose, onSave, type }) => {
   const [file, setFile] = useState(null);
+  const [error, setError] = useState("");
 
   const handleFileChange = e => {
-    setFile(e.target.files[0]);
+    const selectedFile = e.target.files[0];
+    if (selectedFile && selectedFile.size > MAX_FILE_SIZE) {
+      setError("파일 크기는 2MB 이하이어야 합니다.");
+      setFile(null);
+    } else {
+      setError("");
+      setFile(selectedFile);
+    }
   };
 
   const handleSave = async () => {
@@ -18,14 +28,14 @@ const ImageUploadModal = ({ onClose, onSave, type }) => {
       const { error: uploadError } = await supabase.storage.from(bucketName).upload(filePath, file);
 
       if (uploadError) {
-        console.error("Error uploading file:", uploadError);
+        console.error("파일 업로드 에러:", uploadError);
         return;
       }
 
-      const { data, error: urlError } = supabase.storage.from(bucketName).getPublicUrl(filePath);
+      const { data, error: urlError } = await supabase.storage.from(bucketName).getPublicUrl(filePath);
 
       if (urlError) {
-        console.error("Error getting public URL:", urlError);
+        console.error("URL 가져오기 에러:", urlError);
         return;
       }
 
@@ -42,9 +52,12 @@ const ImageUploadModal = ({ onClose, onSave, type }) => {
         </ModalHeader>
         <ModalBody>
           <input type="file" accept="image/*" onChange={handleFileChange} />
+          {error && <ErrorText>{error}</ErrorText>}
         </ModalBody>
         <ModalFooter>
-          <button onClick={handleSave}>저장</button>
+          <button onClick={handleSave} disabled={!file}>
+            저장
+          </button>
           <button onClick={onClose}>취소</button>
         </ModalFooter>
       </ModalContent>
@@ -97,6 +110,12 @@ const ModalBody = styled.div`
   }
 `;
 
+const ErrorText = styled.p`
+  color: red;
+  font-size: 14px;
+  margin: 0;
+`;
+
 const ModalFooter = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -115,7 +134,12 @@ const ModalFooter = styled.div`
     background-color: #ffd0d0;
     color: #000;
 
-    &:hover {
+    &:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    &:hover:enabled {
       background-color: #ffc0c0;
     }
   }
