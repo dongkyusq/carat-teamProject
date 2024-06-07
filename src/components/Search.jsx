@@ -4,7 +4,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import supabase from "../supabaseClient";
 
 function Search({ userInput, setUserInput }) {
-  const [searchfocus, setSearchfocus] = useState(false);
+  const [searchFocus, setSearchFocus] = useState(false);
   const [posts, setPosts] = useState([]);
 
   const searchData = e => {
@@ -30,7 +30,7 @@ function Search({ userInput, setUserInput }) {
     getProducts();
   }, []);
 
-  const filteredPosts = posts.filter(post => post.text_content.toLowerCase().includes(userInput || "".toLowerCase())).sort((a, b) => b.likes - a.likes);
+  const filteredPosts = posts.filter(post => post.text_content.toLowerCase().includes(userInput.toLowerCase())).sort((a, b) => b.likes - a.likes);
   console.log("123", userInput);
 
   return (
@@ -38,7 +38,7 @@ function Search({ userInput, setUserInput }) {
       <div>
         <SearchBox onSubmit={searchClick}>
           <SearchIcon style={{ color: "#000" }} />
-          <input type="text" placeholder="Search" onChange={searchData} onFocus={() => setSearchfocus(true)} onBlur={() => setSearchfocus(false)} searchfocus={searchfocus} />
+          <input type="text" placeholder="Search" onChange={searchData} onFocus={() => setSearchFocus(true)} onBlur={() => setSearchFocus(false)} searchfocus={searchFocus.toString()} />
         </SearchBox>
       </div>
     </>

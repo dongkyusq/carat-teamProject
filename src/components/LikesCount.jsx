@@ -18,7 +18,6 @@ export default function LikeBtn({ postId }) {
     }
 
     if (post) {
-      console.log("Fetched post likes:", post.likes);
       setCurrentLikes(post.likes);
     }
   };
@@ -37,7 +36,6 @@ export default function LikeBtn({ postId }) {
     }
 
     const isLiked = likes.length > 0;
-    console.log("Fetched user likes:", isLiked);
     setLiked(isLiked);
   };
 
@@ -94,16 +92,12 @@ export default function LikeBtn({ postId }) {
       updatedLikes += 1;
     }
 
-    console.log("Updated likes before saving:", updatedLikes);
-
     const { error: updateError } = await supabase.from("posts").update({ likes: updatedLikes }).eq("id", postId);
 
     if (updateError) {
       console.error("Post update error:", updateError);
       return;
     }
-
-    console.log("Post likes updated in database");
 
     setCurrentLikes(updatedLikes);
     setLiked(!liked);
