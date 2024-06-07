@@ -16,7 +16,6 @@ const UserPosts = ({ userId }) => {
         {userPosts.map((post, index) => (
           <ListItem key={index}>
             <UserInfo>
-              <UserImg src="/src/assets/User.jpg" alt="User" />
               <UserName>{post.user_name}</UserName>
               <TimeBox>{new Date(post.created_at).toLocaleString()}</TimeBox>
             </UserInfo>

@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import supabase from "../supabaseClient";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsLoggedIn } from "../redux/slices/isLoggedInSlice";
+import logo from "/src/assets/logo.png";
+import profileLogo from "/src/assets/profileLogo.png";
 
 const LeftBox = () => {
   const navigate = useNavigate();
@@ -68,13 +70,13 @@ const LeftBox = () => {
       const { data: userData, error } = await supabase.from("user_data").select("nickname, profile").eq("id", user.id).single();
       if (userData && !error) {
         setUserName(userData.nickname);
-        setUserImg(userData.profile || "/public/img/profileLogo.png");
+        setUserImg(userData.profile || profileLogo);
       } else {
         console.error("Failed to fetch user data", error);
       }
     } else {
       setUserName("");
-      setUserImg("public/img/profileLogo.png");
+      setUserImg(profileLogo);
       dispatch(setIsLoggedIn(false)); // 로그아웃 상태로 변경
     }
   };
@@ -87,7 +89,7 @@ const LeftBox = () => {
     <Box>
       <BoxInner>
         <Logo>
-          <LogoImg src="/src/assets/logo.png" alt="News Feed Logo" width="100%" height="100%" />
+          <LogoImg src={logo} alt="News Feed Logo" width="100%" height="100%" />
         </Logo>
         <UserBox>
           <UserInfo onClick={goMyPage}>
