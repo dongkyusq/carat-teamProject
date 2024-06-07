@@ -76,7 +76,7 @@ const LeftBox = () => {
       }
     } else {
       setUserName("");
-      setUserImg("public/img/profileLogo.png");
+      setUserImg(profileLogo);
       dispatch(setIsLoggedIn(false)); // 로그아웃 상태로 변경
     }
   };
