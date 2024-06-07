@@ -1,8 +1,14 @@
 ## ✨프로젝트 소개✨
 
-### 💻[YouTube]
+<br>
+
+### 💻[YouTube](https://youtu.be/eGd0-a0B0JA)
+
+<br>
 
 ### 🔗[배포링크](https://carat-newsfeed-team-project-ir61.vercel.app/)
+
+<br>
 
 | 프로젝트명  |                                                             CARAT                                                             |
 | :---------: | :---------------------------------------------------------------------------------------------------------------------------: |
@@ -18,6 +24,8 @@
 <img src="https://img.shields.io/badge/react-20232a.svg?style=for-the-badge&logo=react&logoColor=61DAFB" /> <img src="https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=ffd35b" /> <img src="https://img.shields.io/badge/redux-%23593d88.svg?style=for-the-badge&logo=redux&logoColor=white" /> <img src = "https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white" />
 <img src="https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=Vercel&logoColor=white"/>
 
+<br>
+
 ## 💁💁‍♀️개발자 소개
 
 <table>
@@ -32,6 +40,8 @@
     </tr>
   </tbody>
 </table>
+
+<br>
 
 ## 💡기능
 
@@ -51,3 +61,9 @@
   - 인기
   - MBTI 별
 - 날씨
+
+<br>
+
+## Work from
+
+스파르타코딩교육 내일배움캠프 React 5기 A13조 6주차 팀 프로젝트
