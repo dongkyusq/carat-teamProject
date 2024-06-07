@@ -82,7 +82,10 @@ function NewsfeedCreate() {
           resetText();
         });
       });
+      navigate("../");
+      return;
     }
+
     createPost({
       text_content: postContent,
       user_name: userNickname,

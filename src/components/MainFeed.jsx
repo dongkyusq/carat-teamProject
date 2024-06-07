@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchPosts } from "../redux/slices/postSortSlice";
 import UserBtns from "./UserBtns";
 import CommentModal from "./CommentModal";
-import LikesBtn from "./LikesBtn";
+import LikeBtn from "./LikesCount";
 import supabase from "../supabaseClient";
 
 const MainFeed = ({ userInput }) => {
@@ -67,9 +67,7 @@ const MainFeed = ({ userInput }) => {
                   <Button onClick={() => handleCommentClick(post)}>
                     <CommentIcon sx={iconStyle} />
                   </Button>
-                  <Button>
-                    <LikesBtn post={post}>{post.likes}</LikesBtn>
-                  </Button>
+                  <LikeBtn postId={post.id} />
                 </ButtonWrap>
                 <UserBtns post={post} />
               </IconListBox>
