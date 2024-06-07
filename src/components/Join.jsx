@@ -86,12 +86,12 @@ const Join = () => {
 
             <JoinInput>
               <Lable> 비밀번호 * : </Lable>
-              <Input type="password" placeholder="비밀번호를 입력해주세요" ref={pwRef} required />
+              <Input type="password" placeholder="비밀번호를 입력해주세요 ( 6자리 이상) " ref={pwRef} required />
             </JoinInput>
 
             <JoinInput>
               <Lable> 비밀번호 확인 * : </Lable>
-              <Input type="password" placeholder="비밀번호를 입력해주세요" ref={confirmpwRef} required />
+              <Input type="password" placeholder="비밀번호를 입력해주세요 (6자리 이상) " ref={confirmpwRef} required />
             </JoinInput>
 
             <JoinInput>
