@@ -68,7 +68,7 @@ const LeftBox = () => {
       const { data: userData, error } = await supabase.from("user_data").select("nickname, profile").eq("id", user.id).single();
       if (userData && !error) {
         setUserName(userData.nickname);
-        setUserImg(userData.profile || "/public/img/profileLogo.png");
+        setUserImg(userData.profile || "./src/assets/profileLogo.png");
       } else {
         console.error("Failed to fetch user data", error);
       }
@@ -87,7 +87,7 @@ const LeftBox = () => {
     <Box>
       <BoxInner>
         <Logo>
-          <LogoImg src="/src/assets/logo.png" alt="News Feed Logo" width="100%" height="100%" />
+          <LogoImg src="./src/assets/logo.png" alt="News Feed Logo" width="100%" height="100%" />
         </Logo>
         <UserBox>
           <UserInfo onClick={goMyPage}>
